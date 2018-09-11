@@ -1,0 +1,44 @@
+{
+  "@odata.context": "string",
+  "value": [
+    {
+      "LicenseKey": "string",
+      "MachineName": "string",
+      "MachineId": 0,
+      "Name": "string",
+      "Username": "string",
+      "Description": "string",
+      "Type": "NonProduction",
+      "Password": "string",
+      "Environments": [
+        {
+          "Name": "string",
+          "Description": "string",
+          "Robots": [
+            {
+              "LicenseKey": "string",
+              "MachineName": "string",
+              "MachineId": 0,
+              "Name": "string",
+              "Username": "string",
+              "Description": "string",
+              "Type": "NonProduction",
+              "Password": "string",
+              "Environments": [
+                {}
+              ],
+              "RobotEnvironments": "string",
+              "ExecutionSettings": {},
+              "Id": 0
+            }
+          ],
+          "Type": "Dev",
+          "Id": 0
+        }
+      ],
+      "RobotEnvironments": "string",
+      "ExecutionSettings": {},
+      "Id": 5
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "@odata.context": "string",
+  "value": [
+    {
+      "Key": "myCustomKey",
+      "ProcessKey": "myProcessKey",
+      "ProcessVersion": "1.0",
+      "IsLatestVersion": true,
+      "IsProcessDeleted": true,
+      "Description": "string",
+      "Name": "string",
+      "EnvironmentId": 0,
+      "EnvironmentName": "string",
+      "Environment": {
+        "Name": "string",
+        "Description": "string",
+        "Robots": [
+          {
+            "LicenseKey": "string",
+            "MachineName": "string",
+            "MachineId": 0,
+            "Name": "string",
+            "Username": "string",
+            "Description": "string",
+            "Type": "NonProduction",
+            "Password": "string",
+            "Environments": [
+              {}
+            ],
+            "RobotEnvironments": "string",
+            "ExecutionSettings": {},
+            "Id": 1
+          }
+        ],
+        "Type": "Dev",
+        "Id": 0
+      },
+      "CurrentVersion": {
+        "ReleaseId": 0,
+        "VersionNumber": "string",
+        "CreationTime": "2018-09-10T14:26:05.095Z",
+        "Id": 2
+      },
+      "ReleaseVersions": [
+        {
+          "ReleaseId": 0,
+          "VersionNumber": "string",
+          "CreationTime": "2018-09-10T14:26:05.095Z",
+          "Id": 2
+        }
+      ],
+      "Id": 1
+    }
+  ]
+}

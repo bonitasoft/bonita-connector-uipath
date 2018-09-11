@@ -1,0 +1,94 @@
+{
+  "@odata.context": "string",
+  "value": [
+    {
+      "Key": "string",
+      "StartTime": "2018-09-11T08:20:29.297Z",
+      "EndTime": "2018-09-11T08:20:29.297Z",
+      "State": "Pending",
+      "Robot": {
+        "LicenseKey": "string",
+        "MachineName": "string",
+        "MachineId": 0,
+        "Name": "string",
+        "Username": "string",
+        "Description": "string",
+        "Type": "NonProduction",
+        "Password": "string",
+        "Environments": [
+          {
+            "Name": "string",
+            "Description": "string",
+            "Robots": [
+              {}
+            ],
+            "Type": "Dev",
+            "Id": 0
+          }
+        ],
+        "RobotEnvironments": "string",
+        "ExecutionSettings": {},
+        "Id": 0
+      },
+      "Release": {
+        "Key": "string",
+        "ProcessKey": "string",
+        "ProcessVersion": "string",
+        "IsLatestVersion": true,
+        "IsProcessDeleted": true,
+        "Description": "string",
+        "Name": "string",
+        "EnvironmentId": 0,
+        "EnvironmentName": "string",
+        "Environment": {
+          "Name": "string",
+          "Description": "string",
+          "Robots": [
+            {
+              "LicenseKey": "string",
+              "MachineName": "string",
+              "MachineId": 0,
+              "Name": "string",
+              "Username": "string",
+              "Description": "string",
+              "Type": "NonProduction",
+              "Password": "string",
+              "Environments": [
+                {}
+              ],
+              "RobotEnvironments": "string",
+              "ExecutionSettings": {},
+              "Id": 0
+            }
+          ],
+          "Type": "Dev",
+          "Id": 0
+        },
+        "CurrentVersion": {
+          "ReleaseId": 0,
+          "VersionNumber": "string",
+          "CreationTime": "2018-09-11T08:20:29.298Z",
+          "Id": 0
+        },
+        "ReleaseVersions": [
+          {
+            "ReleaseId": 0,
+            "VersionNumber": "string",
+            "CreationTime": "2018-09-11T08:20:29.298Z",
+            "Id": 0
+          }
+        ],
+        "Id": 0
+      },
+      "Source": "string",
+      "SourceType": "Manual",
+      "BatchExecutionKey": "string",
+      "Info": "string",
+      "CreationTime": "2018-09-11T08:20:29.298Z",
+      "StartingScheduleId": 0,
+      "ReleaseName": "string",
+      "Type": "Unattended",
+      "Id": 54
+    }
+  ]
+}

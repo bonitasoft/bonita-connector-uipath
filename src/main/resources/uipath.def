@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
+  <id>uipath</id>
+  <version>1.0.0</version>
+  <icon>uipath.png</icon>
+  <category icon="rpa.png" id="RPA"/>
+  <input mandatory="true" name="url" type="java.lang.String"/>
+  <input mandatory="true" name="tenant" type="java.lang.String"/>
+  <input mandatory="true" name="user" type="java.lang.String"/>
+  <input mandatory="true" name="password" type="java.lang.String"/>
+  <input mandatory="true" name="processName" type="java.lang.String"/>
+  <input mandatory="true" name="processVersion" type="java.lang.String"/>
+  <input name="robotNames" type="java.util.List"/>
+  <input name="nbOfRobots" type="java.lang.Integer"/>
+ 
+  <output name="status_code" type="java.lang.Integer"/>
+  <output name="status_message" type="java.lang.String"/>
+  
+  <page id="authenticationPage">
+    <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
+    <widget xsi:type="definition:Text" id="tenantWidget" inputName="tenant"/>
+    <widget xsi:type="definition:Text" id="userWidget" inputName="user"/>
+    <widget xsi:type="definition:Password" id="passwordWidget" inputName="password"/>
+  </page>
+  <page id="configurationPage">
+    <widget xsi:type="definition:Text" id="processNameWidget" inputName="processName"/>
+    <widget xsi:type="definition:Text" id="processVersionWidget" inputName="processVersion"/>
+    <widget xsi:type="definition:List" id="robotsWidget" inputName="robotNames"/>
+    <widget xsi:type="definition:Text" id="nbRobotsdWidget" inputName="nbOfRobots"/>
+  </page>
+ 
+</definition:ConnectorDefinition>
