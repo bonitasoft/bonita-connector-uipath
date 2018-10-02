@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
+  <id>uipath-startjob</id>
+  <version>1.0.0</version>
+  <icon>uipath.png</icon>
+  <category icon="rpa.png" id="RPA"/>
+  <input mandatory="true" name="url" type="java.lang.String"/>
+  <input mandatory="true" name="tenant" type="java.lang.String"/>
+  <input mandatory="true" name="user" type="java.lang.String"/>
+  <input mandatory="true" name="password" type="java.lang.String"/>
+  <input mandatory="true" name="processName" type="java.lang.String"/>
+  <input name="processVersion" type="java.lang.String"/>
+  <input name="strategy" type="java.lang.String" defaultValue="All"/>
+  <input name="source" type="java.lang.String" defaultValue="Manual"/>
+  <input name="robotNames" type="java.util.List"/>
+  <input name="jobsCount" type="java.lang.Integer"/>
+  <input name="inputArguments" type="java.util.Map"/>
+  <input name="bonitaProcessName" type="java.lang.String"/>
+  <input name="bonitaMessageName" type="java.lang.String" defaultValue="UiPathCallbackMessage"/>  
+ 
+  <output name="statusCode" type="java.lang.Integer"/>
+  <output name="statusMessage" type="java.lang.String"/>
+  <output name="startedJobs" type="java.util.List"/>
+  
+  <page id="authenticationPage">
+    <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
+    <widget xsi:type="definition:Text" id="tenantWidget" inputName="tenant"/>
+    <widget xsi:type="definition:Text" id="userWidget" inputName="user"/>
+    <widget xsi:type="definition:Password" id="passwordWidget" inputName="password"/>
+  </page>
+  <page id="configurationPage">
+    <widget xsi:type="definition:Text" id="processNameWidget" inputName="processName"/>
+    <widget xsi:type="definition:Text" id="processVersionWidget" inputName="processVersion"/>
+     <widget xsi:type="definition:Select" id="sourceCombo" inputName="source">
+      <items>Manual</items>
+      <items>Schedule</items>
+    </widget>
+    <widget xsi:type="definition:Select" id="strategyCombo" inputName="strategy">
+      <items>All</items>
+      <items>Specific</items>
+      <items>JobsCount</items>
+    </widget>
+    <widget xsi:type="definition:List" id="robotsWidget" inputName="robotNames"/>
+    <widget xsi:type="definition:Text" id="jobsCountWidget" inputName="jobsCount"/>
+  </page>
+  <page id="inputArgsPage">
+    <widget xsi:type="definition:Array" id="inputArgsTable" inputName="inputArguments" cols="2">
+      <colsCaption>Key</colsCaption>
+      <colsCaption>Value</colsCaption>
+    </widget>
+  </page>
+  <page id="callbackPage">
+     <widget xsi:type="definition:Text" id="messageWidget" inputName="bonitaMessageName"/>
+     <widget xsi:type="definition:Text" id="bonitaProcessNameWidget" inputName="bonitaProcessName"/>
+  </page>
+ 
+</definition:ConnectorDefinition>

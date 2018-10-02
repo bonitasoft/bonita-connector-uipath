@@ -12,15 +12,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connector.uipath;
+package org.bonitasoft.engine.connector.uipath;
 
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.connector.uipath.model.Job;
-import org.bonitasoft.connector.uipath.model.JobRequest;
-import org.bonitasoft.connector.uipath.model.Release;
-import org.bonitasoft.connector.uipath.model.Robot;
+import org.bonitasoft.engine.connector.uipath.model.Job;
+import org.bonitasoft.engine.connector.uipath.model.JobRequest;
+import org.bonitasoft.engine.connector.uipath.model.Release;
+import org.bonitasoft.engine.connector.uipath.model.Robot;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

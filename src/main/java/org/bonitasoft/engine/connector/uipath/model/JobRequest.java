@@ -12,25 +12,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connector.uipath.model;
+package org.bonitasoft.engine.connector.uipath.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum Strategy {
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-    ALL("All"), SPECIFIC("Specific"), ROBOT_COUNT("RobotCount");
+@Data
+@NoArgsConstructor
+@Accessors(chain = true)
+public class JobRequest {
 
-    private final String value;
-
-    private Strategy(String value) {
-        this.value = value;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Enum#toString()
-     */
-    @Override
-    public String toString() {
-        return value;
-    }
+    @JsonProperty("startInfo")
+    private StartInfo startInfo;
+    
 }

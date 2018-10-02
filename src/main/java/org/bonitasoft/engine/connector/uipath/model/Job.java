@@ -12,26 +12,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connector.uipath.model;
+package org.bonitasoft.engine.connector.uipath.model;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(chain = true)
-public class StartInfo {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Job {
 
-    @JsonProperty("ReleaseKey")
-    private String releaseKey;
-    @JsonProperty("RobotIds")
-    private List<Integer> robotIds;
-    @JsonProperty("NoOfRobots")
-    private int noOfRobots;
-    @JsonProperty("Strategy")
-    private String strategy;
+    @JsonProperty("Id")
+    private String id;
+    @JsonProperty("Key")
+    private String key;
+    @JsonProperty("Robot")
+    private Robot robot;
+    @JsonProperty("State")
+    private String state;
+    @JsonProperty("Release")
+    private Release release;
+    @JsonProperty("Info")
+    private String info;
+    @JsonProperty("Source")
+    private String source;
+    @JsonProperty("SourceType")
+    private String sourceType;
 
 }

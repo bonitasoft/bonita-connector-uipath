@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connector.uipath.converters;
+package org.bonitasoft.engine.connector.uipath.converters;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -32,8 +32,8 @@ public class WrappedAttributeConverter extends Factory {
 
     private final ObjectMapper objectMapper;
 
-    public WrappedAttributeConverter() {
-        objectMapper = new ObjectMapper();
+    public WrappedAttributeConverter(ObjectMapper mapper) {
+        objectMapper = mapper;
     }
     /*
      * (non-Javadoc)

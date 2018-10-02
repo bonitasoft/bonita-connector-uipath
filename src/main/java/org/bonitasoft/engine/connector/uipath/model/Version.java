@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connector.uipath.model;
+package org.bonitasoft.engine.connector.uipath.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,11 +21,13 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Robot {
+public class Version {
 
-    @JsonProperty("Name")
-    private String name;
+    @JsonProperty("ReleaseId")
+    private long releaseId;
+    @JsonProperty("VersionNumber")
+    private String versionNumber;
     @JsonProperty("Id")
-    private int id;
+    private long id;
     
 }

@@ -12,22 +12,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connector.uipath.model;
+package org.bonitasoft.engine.connector.uipath.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Data;
+public enum Strategy {
 
-@Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Version {
+    ALL("All"), SPECIFIC("Specific"), JOBS_COUNT("JobsCount");
 
-    @JsonProperty("ReleaseId")
-    private long releaseId;
-    @JsonProperty("VersionNumber")
-    private String versionNumber;
-    @JsonProperty("Id")
-    private long id;
-    
+    private final String value;
+
+    private Strategy(String value) {
+        this.value = value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Enum#toString()
+     */
+    @Override
+    public String toString() {
+        return value;
+    }
 }

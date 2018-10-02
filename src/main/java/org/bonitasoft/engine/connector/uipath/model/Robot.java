@@ -12,20 +12,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connector.uipath.model;
+package org.bonitasoft.engine.connector.uipath.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 @Data
-@NoArgsConstructor
-@Accessors(chain = true)
-public class JobRequest {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Robot {
 
-    @JsonProperty("startInfo")
-    private StartInfo startInfo;
+    @JsonProperty("Name")
+    private String name;
+    @JsonProperty("Id")
+    private int id;
     
 }

@@ -12,30 +12,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connector.uipath.model;
+package org.bonitasoft.engine.connector.uipath.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Release {
+@Accessors(chain = true)
+public class StartInfo {
 
-    @JsonProperty("Key")
-    private String key;
-    @JsonProperty("ProcessKey")
-    private String processKey;
-    @JsonProperty("ProcessVersion")
-    private String processVersion;
-    @JsonProperty("CurrentVersion")
-    private Version currentVersion;
-    @JsonProperty("ReleaseVersions")
-    private List<Version> releaseVersions;
-    @JsonProperty("Id")
-    private int id;
-    
+    @JsonProperty("ReleaseKey")
+    private String releaseKey;
+    @JsonProperty("RobotIds")
+    @JsonInclude(Include.NON_EMPTY)
+    private List<Integer> robotIds;
+    @JsonProperty("JobsCount")
+    @JsonInclude(Include.NON_NULL)
+    private Integer jobsCount;
+    @JsonProperty("Strategy")
+    @JsonInclude(Include.NON_NULL)
+    private String strategy;
+    @JsonProperty("Source")
+    @JsonInclude(Include.NON_NULL)
+    private String source;
+    @JsonProperty("InputArguments")
+    @JsonInclude(Include.NON_EMPTY)
+    private String args;
+
 }
