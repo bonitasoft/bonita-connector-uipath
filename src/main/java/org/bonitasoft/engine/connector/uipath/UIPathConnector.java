@@ -54,6 +54,7 @@ public class UIPathConnector extends AbstractConnector {
     static final String PROCESS_INSTANCE_ID = "bonitaProcessInstanceId";
     static final String BONITA_PROCESS_NAME = "bonitaProcessName";
     static final String BONITA_MESSAGE_NAME = "bonitaMessageName";
+    static final String PROCESS_INSTANCE_CORRELATION_KEY = "processInstanceCorrelationKey";
 
     private UIPathService service;
     private ObjectMapper mapper = new ObjectMapper();
@@ -228,6 +229,7 @@ public class UIPathConnector extends AbstractConnector {
         Map<String, Object> inputArgs = getInputArguments().orElse(new HashMap<String, Object>());
         inputArgs.put(PROCESS_INSTANCE_ID, getExecutionContext().getProcessInstanceId());
         inputArgs.put(BONITA_PROCESS_NAME, getBonitaProcessName().orElse(retrieveCurrentProcessName()));
+        inputArgs.put(PROCESS_INSTANCE_CORRELATION_KEY, getProcessInstanceCorrelationKey());
         getBonitaMessageName().ifPresent(message -> inputArgs.put(BONITA_MESSAGE_NAME, message));
         return inputArgs;
     }
@@ -353,6 +355,10 @@ public class UIPathConnector extends AbstractConnector {
 
     Optional<String> getBonitaMessageName() {
         return Optional.ofNullable((String) getInputParameter(BONITA_MESSAGE_NAME));
+    }
+
+    String getProcessInstanceCorrelationKey() {
+        return Optional.ofNullable((String) getInputParameter(PROCESS_INSTANCE_CORRELATION_KEY)).orElse("processInstanceId");
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

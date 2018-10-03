@@ -195,9 +195,9 @@ public class UIPathConnectorTest {
         doReturn(apiAccessor).when(uiPathConnector).getAPIAccessor();
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(UIPathConnector.URL, "http://localhost:8888");
-        parameters.put(UIPathConnector.TENANT, "bonita_heroes");
+        parameters.put(UIPathConnector.TENANT, "a_tenant");
         parameters.put(UIPathConnector.USER, "admin");
-        parameters.put(UIPathConnector.PASSWORD, "Bonitasoft2018");
+        parameters.put(UIPathConnector.PASSWORD, "somePassowrd");
         parameters.put(UIPathConnector.PROCESS_NAME, "myProcessKey");
         parameters.put(UIPathConnector.PROCESS_VERSION, "1.0");
         uiPathConnector.setInputParameters(parameters);

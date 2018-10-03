@@ -17,6 +17,7 @@
   <input name="inputArguments" type="java.util.Map"/>
   <input name="bonitaProcessName" type="java.lang.String"/>
   <input name="bonitaMessageName" type="java.lang.String" defaultValue="UiPathCallbackMessage"/>  
+  <input name="processInstanceCorrelationKey" type="java.lang.String" defaultValue="processInstanceId"/>  
  
   <output name="statusCode" type="java.lang.Integer"/>
   <output name="statusMessage" type="java.lang.String"/>
@@ -51,6 +52,7 @@
   </page>
   <page id="callbackPage">
      <widget xsi:type="definition:Text" id="messageWidget" inputName="bonitaMessageName"/>
+     <widget xsi:type="definition:Text" id="processInstanceCorrelationKeyWidget" inputName="processInstanceCorrelationKey"/>
      <widget xsi:type="definition:Text" id="bonitaProcessNameWidget" inputName="bonitaProcessName"/>
   </page>
  
