@@ -10,8 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.bonitasoft.engine.bpm.process.ProcessDefinition;
-import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
@@ -20,6 +18,7 @@ import org.bonitasoft.engine.connector.uipath.model.Job;
 import org.bonitasoft.engine.connector.uipath.model.JobRequest;
 import org.bonitasoft.engine.connector.uipath.model.Release;
 import org.bonitasoft.engine.connector.uipath.model.Robot;
+import org.bonitasoft.engine.connector.uipath.model.Source;
 import org.bonitasoft.engine.connector.uipath.model.StartInfo;
 import org.bonitasoft.engine.connector.uipath.model.Strategy;
 import org.slf4j.Logger;
@@ -47,14 +46,8 @@ public class UIPathConnector extends AbstractConnector {
     static final String PROCESS_VERSION = "processVersion";
     static final String ROBOTS_NAMES = "robotNames";
     static final String JOBS_COUNT = "jobsCount";
-    static final String SOURCE = "source";
     static final String STRATEGY = "strategy";
     static final String INPUT_ARGS = "inputArguments";
-
-    static final String PROCESS_INSTANCE_ID = "bonitaProcessInstanceId";
-    static final String BONITA_PROCESS_NAME = "bonitaProcessName";
-    static final String BONITA_MESSAGE_NAME = "bonitaMessageName";
-    static final String PROCESS_INSTANCE_CORRELATION_KEY = "processInstanceCorrelationKey";
 
     private UIPathService service;
     private ObjectMapper mapper = new ObjectMapper();
@@ -204,11 +197,16 @@ public class UIPathConnector extends AbstractConnector {
     List<Job> startJobs(String token, Release release, List<Integer> robotIds)
             throws IOException, ConnectorException {
         StartInfo startInfo = new StartInfo()
-                .setReleaseKey(release.getKey())
-                .setRobotIds(robotIds);
-        getJobsCount().ifPresent(startInfo::setJobsCount);
-        getSource().ifPresent(startInfo::setSource);
+                .setSource(Source.MANUAL.toString())
+                .setReleaseKey(release.getKey());
+
         getStrategy().ifPresent(startInfo::setStrategy);
+        if (Objects.equals(startInfo.getStrategy(), Strategy.SPECIFIC.toString())) {
+            startInfo.setRobotIds(robotIds);
+        }
+        if (Objects.equals(startInfo.getStrategy(), Strategy.JOBS_COUNT.toString())) {
+            getJobsCount().ifPresent(startInfo::setJobsCount);
+        }
         try {
             startInfo.setArgs(mapper.writeValueAsString(handleInputArgs()));
         } catch (JsonProcessingException e) {
@@ -226,24 +224,9 @@ public class UIPathConnector extends AbstractConnector {
     }
 
     private Map<String, Object> handleInputArgs() {
-        Map<String, Object> inputArgs = getInputArguments().orElse(new HashMap<String, Object>());
-        inputArgs.put(PROCESS_INSTANCE_ID, getExecutionContext().getProcessInstanceId());
-        inputArgs.put(BONITA_PROCESS_NAME, getBonitaProcessName().orElse(retrieveCurrentProcessName()));
-        inputArgs.put(PROCESS_INSTANCE_CORRELATION_KEY, getProcessInstanceCorrelationKey());
-        getBonitaMessageName().ifPresent(message -> inputArgs.put(BONITA_MESSAGE_NAME, message));
-        return inputArgs;
+        return getInputArguments().orElse(new HashMap<String, Object>());
     }
 
-    private String retrieveCurrentProcessName() {
-        long pDef = getExecutionContext().getProcessDefinitionId();
-        try {
-            ProcessDefinition processDefinition = getAPIAccessor().getProcessAPI().getProcessDefinition(pDef);
-            return processDefinition.getName();
-        } catch (ProcessDefinitionNotFoundException e) {
-            LOGGER.error("Cannot retrieve bonita process name", e);
-            return null;
-        }
-    }
 
     List<Release> releases(String token) throws IOException, ConnectorException {
         Response<List<Release>> response = service.releases(buildTokenHeader(token)).execute();
@@ -333,10 +316,6 @@ public class UIPathConnector extends AbstractConnector {
         return Optional.ofNullable((Integer) getInputParameter(JOBS_COUNT));
     }
 
-    Optional<String> getSource() {
-        return Optional.ofNullable((String) getInputParameter(SOURCE));
-    }
-
     Optional<String> getStrategy() {
         return Optional.ofNullable((String) getInputParameter(STRATEGY));
     }
@@ -347,18 +326,6 @@ public class UIPathConnector extends AbstractConnector {
             return Optional.of(toMap(inputParameter));
         }
         return Optional.ofNullable((Map) getInputParameter(INPUT_ARGS));
-    }
-
-    Optional<String> getBonitaProcessName() {
-        return Optional.ofNullable((String) getInputParameter(BONITA_PROCESS_NAME));
-    }
-
-    Optional<String> getBonitaMessageName() {
-        return Optional.ofNullable((String) getInputParameter(BONITA_MESSAGE_NAME));
-    }
-
-    String getProcessInstanceCorrelationKey() {
-        return Optional.ofNullable((String) getInputParameter(PROCESS_INSTANCE_CORRELATION_KEY)).orElse("processInstanceId");
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

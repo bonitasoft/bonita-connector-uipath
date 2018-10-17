@@ -15,9 +15,6 @@
   <input name="robotNames" type="java.util.List"/>
   <input name="jobsCount" type="java.lang.Integer"/>
   <input name="inputArguments" type="java.util.Map"/>
-  <input name="bonitaProcessName" type="java.lang.String"/>
-  <input name="bonitaMessageName" type="java.lang.String" defaultValue="UiPathCallbackMessage"/>  
-  <input name="processInstanceCorrelationKey" type="java.lang.String" defaultValue="processInstanceId"/>  
  
   <output name="statusCode" type="java.lang.Integer"/>
   <output name="statusMessage" type="java.lang.String"/>
@@ -49,11 +46,6 @@
       <colsCaption>Key</colsCaption>
       <colsCaption>Value</colsCaption>
     </widget>
-  </page>
-  <page id="callbackPage">
-     <widget xsi:type="definition:Text" id="messageWidget" inputName="bonitaMessageName"/>
-     <widget xsi:type="definition:Text" id="processInstanceCorrelationKeyWidget" inputName="processInstanceCorrelationKey"/>
-     <widget xsi:type="definition:Text" id="bonitaProcessNameWidget" inputName="bonitaProcessName"/>
   </page>
  
 </definition:ConnectorDefinition>
