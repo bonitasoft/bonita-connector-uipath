@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
+  <id>uipath-getjob</id>
+  <version>1.0.0</version>
+  <icon>uipath.png</icon>
+  <category icon="rpa.png" id="RPA"/>
+  <input mandatory="true" name="url" type="java.lang.String"/>
+  <input mandatory="true" name="tenant" type="java.lang.String"/>
+  <input mandatory="true" name="user" type="java.lang.String"/>
+  <input mandatory="true" name="password" type="java.lang.String"/>
+  <input mandatory="true" name="jobId" type="java.lang.String"/>
+ 
+  <output name="statusCode" type="java.lang.Integer"/>
+  <output name="statusMessage" type="java.lang.String"/>
+  <output name="jobState" type="java.lang.String"/>
+  <output name="jobOutputsArgs" type="java.lang.String"/>
+  
+  <page id="authenticationPage">
+    <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
+    <widget xsi:type="definition:Text" id="tenantWidget" inputName="tenant"/>
+    <widget xsi:type="definition:Text" id="userWidget" inputName="user"/>
+    <widget xsi:type="definition:Password" id="passwordWidget" inputName="password"/>
+    <widget xsi:type="definition:Text" id="jobIdWidget" inputName="jobId"/>
+  </page>
+</definition:ConnectorDefinition>

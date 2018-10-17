@@ -29,6 +29,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface UIPathService {
 
@@ -46,4 +47,7 @@ public interface UIPathService {
 
     @POST("/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs")
     Call<List<Job>> startJob(@Header("Authorization") String token, @Body JobRequest jobRequest);
+
+    @GET("odata/Jobs({Id})")
+    Call<Job> job(@Header("Authorization") String token, @Path("Id") long id);
 }

@@ -15,30 +15,21 @@
 package org.bonitasoft.engine.connector.uipath;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.engine.api.APIAccessor;
-import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.bpm.process.impl.internal.ProcessDefinitionImpl;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-import org.bonitasoft.engine.connector.EngineExecutionContext;
 import org.bonitasoft.engine.connector.uipath.model.Release;
 import org.bonitasoft.engine.connector.uipath.model.Robot;
-import org.hamcrest.core.StringStartsWith;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -47,17 +38,10 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import lombok.Data;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UIPathConnectorTest {
+public class UIPathStartJobsConnectorTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-
-    @Mock
-    private EngineExecutionContext evaluationContext;
-    @Mock
-    private APIAccessor apiAccessor;
-    @Mock
-    private ProcessAPI processApi;
 
     @ClassRule
     public static WireMockRule uiPathService = new WireMockRule(8888);
@@ -97,7 +81,7 @@ public class UIPathConnectorTest {
 
     @Test
     public void should_retrieve_releases() throws Exception {
-        UIPathConnector uiPathConnector = createConnector();
+        UIPathStartJobsConnector uiPathConnector = createConnector();
         uiPathConnector.connect();
         List<Release> releases = uiPathConnector.releases("aToken");
 
@@ -110,7 +94,7 @@ public class UIPathConnectorTest {
 
     @Test
     public void should_retrieve_robots() throws Exception {
-        UIPathConnector uiPathConnector = createConnector();
+        UIPathStartJobsConnector uiPathConnector = createConnector();
         uiPathConnector.connect();
         List<Robot> robots = uiPathConnector.robots("aToken");
 
@@ -134,12 +118,12 @@ public class UIPathConnectorTest {
 
     @Test
     public void should_throw_a_ConnectorValidationException_if_input_arguments_has_non_string_keys() throws Exception {
-        UIPathConnector uiPathConnector = new UIPathConnector();
+        UIPathStartJobsConnector uiPathConnector = new UIPathStartJobsConnector();
         Map<String, Object> inputs = new HashMap<>();
         Map<Object, Object> inputArgs = new HashMap<>();
         inputArgs.put("key", "value1");
         inputArgs.put(1, "value2");
-        inputs.put(UIPathConnector.INPUT_ARGS, inputArgs);
+        inputs.put(UIPathStartJobsConnector.INPUT_ARGS, inputArgs);
         uiPathConnector.setInputParameters(inputs);
 
         expectedException.expect(ConnectorValidationException.class);
@@ -148,28 +132,11 @@ public class UIPathConnectorTest {
         uiPathConnector.checkArgsInput();
     }
 
-    @Test
-    public void should_throw_a_ConnectorValidationException_if_input_arguments_has_non_serializable_values()
-            throws Exception {
-        UIPathConnector uiPathConnector = new UIPathConnector();
-        Map<String, Object> inputs = new HashMap<>();
-        Map<Object, Object> inputArgs = new HashMap<>();
-        inputArgs.put("key", "value1");
-        inputArgs.put("key2", new UIPathConnectorTest());
-        inputs.put(UIPathConnector.INPUT_ARGS, inputArgs);
-        uiPathConnector.setInputParameters(inputs);
-
-        expectedException.expect(ConnectorValidationException.class);
-        expectedException
-                .expectMessage(new StringStartsWith("Only Serializable values are allowed in job input arguments. Found ["));
-
-        uiPathConnector.checkArgsInput();
-    }
 
     @Test
     public void should_validate_input_arguments()
             throws Exception {
-        UIPathConnector uiPathConnector = new UIPathConnector();
+        UIPathStartJobsConnector uiPathConnector = new UIPathStartJobsConnector();
         Map<String, Object> inputs = new HashMap<>();
         Map<Object, Object> inputArgs = new HashMap<>();
         inputArgs.put("key", "value1");
@@ -181,25 +148,21 @@ public class UIPathConnectorTest {
         manager.setName("Doe");
         user.setManager(manager);
         inputArgs.put("user", user);
-        inputs.put(UIPathConnector.INPUT_ARGS, inputArgs);
+        inputs.put(UIPathStartJobsConnector.INPUT_ARGS, inputArgs);
         uiPathConnector.setInputParameters(inputs);
 
         uiPathConnector.checkArgsInput();
     }
 
-    private UIPathConnector createConnector() throws Exception {
-        UIPathConnector uiPathConnector = spy(new UIPathConnector());
-        doReturn(evaluationContext).when(uiPathConnector).getExecutionContext();
-        when(apiAccessor.getProcessAPI()).thenReturn(processApi);
-        when(processApi.getProcessDefinition(anyLong())).thenReturn(new ProcessDefinitionImpl("Test", "1.0"));
-        doReturn(apiAccessor).when(uiPathConnector).getAPIAccessor();
+    private UIPathStartJobsConnector createConnector() throws Exception {
+        UIPathStartJobsConnector uiPathConnector = spy(new UIPathStartJobsConnector());
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(UIPathConnector.URL, "http://localhost:8888");
         parameters.put(UIPathConnector.TENANT, "a_tenant");
         parameters.put(UIPathConnector.USER, "admin");
         parameters.put(UIPathConnector.PASSWORD, "somePassowrd");
-        parameters.put(UIPathConnector.PROCESS_NAME, "myProcessKey");
-        parameters.put(UIPathConnector.PROCESS_VERSION, "1.0");
+        parameters.put(UIPathStartJobsConnector.PROCESS_NAME, "myProcessKey");
+        parameters.put(UIPathStartJobsConnector.PROCESS_VERSION, "1.0");
         uiPathConnector.setInputParameters(parameters);
         uiPathConnector.validateInputParameters();
         return uiPathConnector;
@@ -211,5 +174,4 @@ public class UIPathConnectorTest {
         private String firstname;
         private User manager;
     }
-
 }

@@ -138,6 +138,16 @@
                             <descriptor>${basedir}/startjob-assembly.xml</descriptor>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>get-job</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptor>${basedir}/getjob-assembly.xml</descriptor>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

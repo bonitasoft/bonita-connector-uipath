@@ -1,0 +1,100 @@
+{
+  "Key": "string",
+  "StartTime": "2018-10-17T14:50:51.496Z",
+  "EndTime": "2018-10-17T14:50:51.496Z",
+  "State": "Pending",
+  "Robot": {
+    "LicenseKey": "string",
+    "MachineName": "string",
+    "MachineId": 0,
+    "Name": "string",
+    "Username": "string",
+    "Description": "string",
+    "Version": "string",
+    "Type": "NonProduction",
+    "HostingType": "Standard",
+    "Password": "string",
+    "Environments": [
+      {
+        "Name": "string",
+        "Description": "string",
+        "Robots": [
+          {}
+        ],
+        "Type": "Dev",
+        "Id": 0
+      }
+    ],
+    "RobotEnvironments": "string",
+    "ExecutionSettings": {},
+    "Id": 0
+  },
+  "Release": {
+    "Key": "string",
+    "ProcessKey": "string",
+    "ProcessVersion": "string",
+    "IsLatestVersion": true,
+    "IsProcessDeleted": true,
+    "Description": "string",
+    "Name": "string",
+    "EnvironmentId": 0,
+    "EnvironmentName": "string",
+    "Environment": {
+      "Name": "string",
+      "Description": "string",
+      "Robots": [
+        {
+          "LicenseKey": "string",
+          "MachineName": "string",
+          "MachineId": 0,
+          "Name": "string",
+          "Username": "string",
+          "Description": "string",
+          "Version": "string",
+          "Type": "NonProduction",
+          "HostingType": "Standard",
+          "Password": "string",
+          "Environments": [
+            {}
+          ],
+          "RobotEnvironments": "string",
+          "ExecutionSettings": {},
+          "Id": 0
+        }
+      ],
+      "Type": "Dev",
+      "Id": 0
+    },
+    "InputArguments": "string",
+    "CurrentVersion": {
+      "ReleaseId": 0,
+      "VersionNumber": "string",
+      "CreationTime": "2018-10-17T14:50:51.496Z",
+      "Id": 0
+    },
+    "ReleaseVersions": [
+      {
+        "ReleaseId": 0,
+        "VersionNumber": "string",
+        "CreationTime": "2018-10-17T14:50:51.496Z",
+        "Id": 0
+      }
+    ],
+    "Arguments": {
+      "Input": "string",
+      "Output": "string"
+    },
+    "Id": 0
+  },
+  "Source": "string",
+  "SourceType": "Manual",
+  "BatchExecutionKey": "string",
+  "Info": "string",
+  "CreationTime": "2018-10-17T14:50:51.496Z",
+  "StartingScheduleId": 0,
+  "ReleaseName": "string",
+  "Type": "Unattended",
+  "InputArguments": "string",
+  "OutputArguments": "string",
+  "Id": 268348846
+}

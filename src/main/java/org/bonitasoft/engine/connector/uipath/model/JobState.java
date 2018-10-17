@@ -14,34 +14,19 @@
  */
 package org.bonitasoft.engine.connector.uipath.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Data;
+public enum JobState {
+    PENDING("Pending"), RUNNING("Running"), STOPPING("Stopping"), TERMINATING("Terminating"), FAULTED("Faulted"), SUCCESSFUL(
+            "Successful"), STOPPED("Stopped");
+    
+    private final String value;
 
-@Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Job {
+    private JobState(String value) {
+        this.value = value;
+    }
 
-    @JsonProperty("Id")
-    private String id;
-    @JsonProperty("Key")
-    private String key;
-    @JsonProperty("Robot")
-    private Robot robot;
-    @JsonProperty("State")
-    private String state;
-    @JsonProperty("Release")
-    private Release release;
-    @JsonProperty("Info")
-    private String info;
-    @JsonProperty("Source")
-    private String source;
-    @JsonProperty("SourceType")
-    private String sourceType;
-    @JsonProperty("InputArguments")
-    private String inputArgs;
-    @JsonProperty("OutputArguments")
-    private String outputArgs;
-
+    @Override
+    public String toString() {
+        return value;
+    }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
-  <implementationId>uipath-startjob-impl</implementationId>
+  <implementationId>uipath-getjob-impl</implementationId>
   <implementationVersion>$implementation.version$</implementationVersion>
-  <definitionId>uipath-startjob</definitionId>
+  <definitionId>uipath-getjob</definitionId>
   <definitionVersion>1.0.0</definitionVersion>
-  <implementationClassname>org.bonitasoft.engine.connector.uipath.UIPathStartJobsConnector</implementationClassname>
+  <implementationClassname>org.bonitasoft.engine.connector.uipath.UIPathGetJobConnector</implementationClassname>
   <hasSources>false</hasSources>
-  <description>The implementation of the start jobs UiPath Connector.</description>
+  <description>The implementation of the get job UiPath Connector.</description>
 
 $Dependencies$
 

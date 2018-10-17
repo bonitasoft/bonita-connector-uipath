@@ -11,7 +11,6 @@
   <input mandatory="true" name="processName" type="java.lang.String"/>
   <input name="processVersion" type="java.lang.String"/>
   <input name="strategy" type="java.lang.String" defaultValue="All"/>
-  <input name="source" type="java.lang.String" defaultValue="Manual"/>
   <input name="robotNames" type="java.util.List"/>
   <input name="jobsCount" type="java.lang.Integer"/>
   <input name="inputArguments" type="java.util.Map"/>
@@ -29,7 +28,6 @@
   <page id="configurationPage">
     <widget xsi:type="definition:Text" id="processNameWidget" inputName="processName"/>
     <widget xsi:type="definition:Text" id="processVersionWidget" inputName="processVersion"/>
-     <widget xsi:type="definition:Select" id="sourceCombo" inputName="source">
       <items>Manual</items>
       <items>Schedule</items>
     </widget>
