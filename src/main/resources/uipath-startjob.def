@@ -28,9 +28,6 @@
   <page id="configurationPage">
     <widget xsi:type="definition:Text" id="processNameWidget" inputName="processName"/>
     <widget xsi:type="definition:Text" id="processVersionWidget" inputName="processVersion"/>
-      <items>Manual</items>
-      <items>Schedule</items>
-    </widget>
     <widget xsi:type="definition:Select" id="strategyCombo" inputName="strategy">
       <items>All</items>
       <items>Specific</items>
