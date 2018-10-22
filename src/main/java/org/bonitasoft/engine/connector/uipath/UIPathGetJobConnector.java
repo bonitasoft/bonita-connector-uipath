@@ -42,19 +42,16 @@ public class UIPathGetJobConnector extends UIPathConnector {
 
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
+        String token = authenticate();
         try {
-            String token = authenticate();
             Job job = job(Long.valueOf(getJobId()), token);
             String state = job.getState();
             setOutputParameter(JOB_STATE, state);
             setOutputParameter(JOB_OUTPUT_ARGS, job.getOutputArgs());
-        } catch (IOException e) {
+        } catch (NumberFormatException | IOException e) {
             throw new ConnectorException(
-                    String.format("Failed to authenticate to '%s' on tenant '%s' with user '%s'", getUrl(), getTenant(),
-                            getUser()),
-                    e);
+                    String.format("Failed to get job with id: %s", getJobId()), e);
         }
-
     }
 
     String getJobId() {

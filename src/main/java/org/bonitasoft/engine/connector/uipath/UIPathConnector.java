@@ -1,6 +1,8 @@
 package org.bonitasoft.engine.connector.uipath;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.connector.AbstractConnector;
@@ -68,11 +70,23 @@ public abstract class UIPathConnector extends AbstractConnector {
         return "Bearer " + token;
     }
 
-    String authenticate() throws IOException, ConnectorException {
-        Response<Map<String, String>> response = service.authenticate(getTenant(), getUser(), getPassword())
-                .execute();
+    String authenticate() throws ConnectorException {
+        Response<Map<String, String>> response;
+        try {
+            response = service.authenticate(getTenant(), getUser(), getPassword())
+                    .execute();
+        } catch (IOException e) {
+            throw new ConnectorException(
+                    String.format("Failed to authenticate to '%s' on tenant '%s' with user '%s'", getUrl(), getTenant(),
+                            getUser()),
+                    e);
+        }
         if (!response.isSuccessful()) {
-            throw new ConnectorException(response.errorBody().string());
+            try {
+                throw new ConnectorException(response.errorBody().string());
+            } catch (IOException e) {
+                throw new ConnectorException("Failed to read response body.", e);
+            }
         }
         return response.body().get("result");
     }
@@ -98,6 +112,17 @@ public abstract class UIPathConnector extends AbstractConnector {
             service = retrofitBuilder.build().create(UIPathService.class);
         }
         return service;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected Map<Object, Object> toMap(Object inputParameter) {
+        Map<Object, Object> result = new HashMap<>();
+        for (Object row : (Iterable) inputParameter) {
+            if (row instanceof List && ((List) row).size() == 2) {
+                result.put(((List<Object>) row).get(0), ((List<Object>) row).get(1));
+            }
+        }
+        return result;
     }
 
     private static String appendTraillingSlash(String url) {
