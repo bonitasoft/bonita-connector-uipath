@@ -17,6 +17,7 @@ package org.bonitasoft.engine.connector.uipath;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
 import org.bonitasoft.engine.connector.uipath.model.Job;
 import org.bonitasoft.engine.connector.uipath.model.JobRequest;
 import org.bonitasoft.engine.connector.uipath.model.Release;
@@ -50,4 +51,7 @@ public interface UIPathService {
 
     @GET("odata/Jobs({Id})")
     Call<Job> job(@Header("Authorization") String token, @Path("Id") long id);
+
+    @POST("/odata/Queues/UiPathODataSvc.AddQueueItem")
+    Call<Object> addQueueItem(@Header("Authorization") String token, @Body AddToQueueRequest request);
 }

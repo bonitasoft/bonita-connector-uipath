@@ -160,6 +160,16 @@
                             <descriptor>${basedir}/getjob-assembly.xml</descriptor>
                         </configuration>
                     </execution>
+                     <execution>
+                        <id>add-queueItem-job</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptor>${basedir}/add-queueItem-assembly.xml</descriptor>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

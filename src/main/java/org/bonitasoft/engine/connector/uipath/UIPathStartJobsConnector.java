@@ -138,23 +138,12 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         }
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private Map<Object, Object> toMap(Object inputParameter) {
-        Map<Object, Object> result = new HashMap<>();
-        for (Object row : (Iterable) inputParameter) {
-            if (row instanceof List && ((List) row).size() == 2) {
-                result.put(((List<Object>) row).get(0), ((List<Object>) row).get(1));
-            }
-        }
-        return result;
-    }
-
     private Map<String, Object> handleInputArgs() {
         return getInputArguments().orElse(new HashMap<String, Object>());
     }
 
     List<Job> startJobs(String token, Release release, List<Integer> robotIds)
-            throws IOException, ConnectorException {
+            throws ConnectorException {
         StartInfo startInfo = new StartInfo()
                 .setSource(Source.MANUAL.toString())
                 .setReleaseKey(release.getKey());
@@ -171,12 +160,21 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         } catch (JsonProcessingException e) {
             LOGGER.error("Failed to convert InputArguments into a JSON String.", e);
         }
-        Response<List<Job>> response = getService()
-                .startJob(buildTokenHeader(token), new JobRequest().setStartInfo(startInfo))
-                .execute();
+        Response<List<Job>> response;
+        try {
+            response = getService()
+                    .startJob(buildTokenHeader(token), new JobRequest().setStartInfo(startInfo))
+                    .execute();
+        } catch (IOException e) {
+            throw new ConnectorException("Failed to start job.", e);
+        }
         if (!response.isSuccessful()) {
             LOGGER.error(response.toString());
-            throw new ConnectorException(response.errorBody().string());
+            try {
+                throw new ConnectorException(response.errorBody().string());
+            } catch (IOException e) {
+                throw new ConnectorException("Failed to read response body.", e);
+            }
         }
         setOutputParameter(STATUS_CODE_OUTPUT, response.code());
         setOutputParameter(STATUS_MESSAGE_OUTPUT, response.message());
@@ -185,7 +183,6 @@ public class UIPathStartJobsConnector extends UIPathConnector {
 
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
-        try {
             String token = authenticate();
             List<Release> releases = releases(token);
             List<Release> processReleases = releases.stream()
@@ -221,26 +218,39 @@ public class UIPathStartJobsConnector extends UIPathConnector {
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
             setOutputParameter(STARTED_JOBS_OUTPUT, output);
-        } catch (IOException e) {
-            throw new ConnectorException(
-                    String.format("Failed to authenticate to '%s' on tenant '%s' with user '%s'", getUrl(), getTenant(),
-                            getUser()),
-                    e);
-        }
     }
 
-    List<Release> releases(String token) throws IOException, ConnectorException {
-        Response<List<Release>> response = getService().releases(buildTokenHeader(token)).execute();
+    List<Release> releases(String token) throws ConnectorException {
+        Response<List<Release>> response;
+        try {
+            response = getService().releases(buildTokenHeader(token)).execute();
+        } catch (IOException e) {
+            throw new ConnectorException("Failed to retrieve releases.", e);
+        }
         if (!response.isSuccessful()) {
-            throw new ConnectorException(response.errorBody().string());
+            try {
+                throw new ConnectorException(response.errorBody().string());
+            } catch (IOException e) {
+                throw new ConnectorException("Failed to read response body.", e);
+            }
         }
         return response.body();
     }
 
-    List<Robot> robots(String token) throws IOException, ConnectorException {
-        Response<List<Robot>> response = getService().robots(buildTokenHeader(token)).execute();
+
+    List<Robot> robots(String token) throws ConnectorException {
+        Response<List<Robot>> response;
+        try {
+            response = getService().robots(buildTokenHeader(token)).execute();
+        } catch (IOException e) {
+            throw new ConnectorException("Failed to retrieve robots.", e);
+        }
         if (!response.isSuccessful()) {
-            throw new ConnectorException(response.errorBody().string());
+            try {
+                throw new ConnectorException(response.errorBody().string());
+            } catch (IOException e) {
+                throw new ConnectorException("Failed to read response body.", e);
+            }
         }
         return response.body();
     }
