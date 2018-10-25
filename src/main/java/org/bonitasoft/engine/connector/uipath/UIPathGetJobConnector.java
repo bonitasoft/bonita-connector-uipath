@@ -63,8 +63,6 @@ public class UIPathGetJobConnector extends UIPathConnector {
         if (!response.isSuccessful()) {
             throw new ConnectorException(response.errorBody().string());
         }
-        setOutputParameter(STATUS_CODE_OUTPUT, response.code());
-        setOutputParameter(STATUS_MESSAGE_OUTPUT, response.message());
         return response.body();
     }
 

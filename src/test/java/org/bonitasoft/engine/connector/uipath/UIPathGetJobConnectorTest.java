@@ -69,7 +69,6 @@ public class UIPathGetJobConnectorTest {
         UIPathGetJobConnector createConnector = createConnector();
         createConnector.connect();
         Map<String, Object> outputs = createConnector.execute();
-        assertThat(outputs.get(UIPathConnector.STATUS_CODE_OUTPUT)).isEqualTo(200);
         assertThat(outputs.get(UIPathGetJobConnector.JOB_STATE)).isEqualTo(JobState.PENDING.toString());
     }
 
@@ -83,7 +82,6 @@ public class UIPathGetJobConnectorTest {
         UIPathGetJobConnector createConnector = createConnector();
         createConnector.connect();
         Map<String, Object> outputs = createConnector.execute();
-        assertThat(outputs.get(UIPathConnector.STATUS_CODE_OUTPUT)).isEqualTo(200);
         assertThat(outputs.get(UIPathGetJobConnector.JOB_STATE)).isEqualTo(JobState.SUCCESSFUL.toString());
         assertThat(outputs.get(UIPathGetJobConnector.JOB_OUTPUT_ARGS)).isEqualTo("{\"out1\" : \"ok\"}");
     }

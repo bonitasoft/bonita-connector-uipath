@@ -20,6 +20,7 @@ import java.util.Map;
 import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
 import org.bonitasoft.engine.connector.uipath.model.Job;
 import org.bonitasoft.engine.connector.uipath.model.JobRequest;
+import org.bonitasoft.engine.connector.uipath.model.QueueItem;
 import org.bonitasoft.engine.connector.uipath.model.Release;
 import org.bonitasoft.engine.connector.uipath.model.Robot;
 
@@ -53,5 +54,5 @@ public interface UIPathService {
     Call<Job> job(@Header("Authorization") String token, @Path("Id") long id);
 
     @POST("/odata/Queues/UiPathODataSvc.AddQueueItem")
-    Call<Object> addQueueItem(@Header("Authorization") String token, @Body AddToQueueRequest request);
+    Call<QueueItem> addQueueItem(@Header("Authorization") String token, @Body AddToQueueRequest request);
 }

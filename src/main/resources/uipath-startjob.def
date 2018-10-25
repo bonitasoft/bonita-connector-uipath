@@ -15,8 +15,6 @@
   <input name="jobsCount" type="java.lang.Integer"/>
   <input name="inputArguments" type="java.util.Map"/>
  
-  <output name="statusCode" type="java.lang.Integer"/>
-  <output name="statusMessage" type="java.lang.String"/>
   <output name="startedJobs" type="java.util.List"/>
   
   <page id="authenticationPage">

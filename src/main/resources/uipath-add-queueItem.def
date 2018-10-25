@@ -15,8 +15,8 @@
   <input name="deferDate" type="java.lang.String"/>
   <input name="dueDate" type="java.lang.String"/>
  
-  <output name="statusCode" type="java.lang.Integer"/>
-  <output name="statusMessage" type="java.lang.String"/>
+  <output name="itemId" type="java.lang.Long"/>
+  <output name="itemKey" type="java.lang.String"/>
   
   <page id="authenticationPage">
     <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>

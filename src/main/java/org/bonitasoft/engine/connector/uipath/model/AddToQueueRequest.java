@@ -25,6 +25,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AddToQueueRequest {
 
-    private QueueItem itemData;
+    private QueueItemRequest itemData;
 
 }

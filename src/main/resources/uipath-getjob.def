@@ -10,8 +10,6 @@
   <input mandatory="true" name="password" type="java.lang.String"/>
   <input mandatory="true" name="jobId" type="java.lang.String"/>
  
-  <output name="statusCode" type="java.lang.Integer"/>
-  <output name="statusMessage" type="java.lang.String"/>
   <output name="jobState" type="java.lang.String"/>
   <output name="jobOutputsArgs" type="java.lang.String"/>
   

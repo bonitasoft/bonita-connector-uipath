@@ -29,8 +29,6 @@ public abstract class UIPathConnector extends AbstractConnector {
     static final String USER = "user";
     static final String PASSWORD = "password";
     static final String TENANT = "tenant";
-    protected static final String STATUS_MESSAGE_OUTPUT = "statusMessage";
-    protected static final String STATUS_CODE_OUTPUT = "statusCode";
 
     protected UIPathService service;
     protected ObjectMapper mapper = new ObjectMapper();

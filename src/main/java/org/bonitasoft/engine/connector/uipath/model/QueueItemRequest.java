@@ -14,20 +14,34 @@
  */
 package org.bonitasoft.engine.connector.uipath.model;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class QueueItem {
+public class QueueItemRequest {
 
-    @JsonProperty("Id")
-    private long id;
-    @JsonProperty("Key")
-    private String key;
+    @JsonProperty("SpecificContent")
+    private Map<String, Object> content;
+    @JsonProperty("Priority")
+    private String priority;
+    @JsonProperty("Reference")
+    private String reference;
+    @JsonProperty("Name")
+    private String name;
+    @JsonProperty("DeferDate")
+    private String deferDate;
+    @JsonProperty("DueDate")
+    private String dueDate;
 
 }

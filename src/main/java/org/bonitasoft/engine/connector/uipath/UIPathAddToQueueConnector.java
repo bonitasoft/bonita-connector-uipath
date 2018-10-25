@@ -27,6 +27,7 @@ import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
 import org.bonitasoft.engine.connector.uipath.model.Priority;
 import org.bonitasoft.engine.connector.uipath.model.QueueItem;
+import org.bonitasoft.engine.connector.uipath.model.QueueItemRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -41,6 +42,8 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
     private static final String PRIORITY_INPUT = "priority";
     private static final String DUE_DATE_INPUT = "dueDate";
     private static final String DEFER_DATE_INPUT = "deferDate";
+    private static final String ITEM_ID_OUTPUT = "itemId";
+    private static final String ITEM_KEY_OUTPUT = "itemKey";
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
@@ -79,7 +82,7 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
         String token = authenticate();
-        QueueItem itemData = new QueueItem()
+        QueueItemRequest itemData = new QueueItemRequest()
                 .setName(getQueueName())
                 .setPriority(getPriority());
         getReference().ifPresent(itemData::setReference);
@@ -101,7 +104,9 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
         getDueDate().ifPresent(itemData::setDueDate);
         getDeferDate().ifPresent(itemData::setDeferDate);
         try {
-            addToQueue(token, new AddToQueueRequest(itemData));
+            QueueItem item = addToQueue(token, new AddToQueueRequest(itemData));
+            setOutputParameter(ITEM_ID_OUTPUT, item.getId());
+            setOutputParameter(ITEM_KEY_OUTPUT, item.getKey());
         } catch (IOException e) {
             throw new ConnectorException("Failed to add queue item.", e);
         }
@@ -139,13 +144,11 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
         return Optional.ofNullable((String) getInputParameter(DEFER_DATE_INPUT));
     }
 
-    Object addToQueue(String token, AddToQueueRequest request) throws IOException, ConnectorException {
-        Response<Object> response = getService().addQueueItem(buildTokenHeader(token), request).execute();
+    QueueItem addToQueue(String token, AddToQueueRequest request) throws IOException, ConnectorException {
+        Response<QueueItem> response = getService().addQueueItem(buildTokenHeader(token), request).execute();
         if (!response.isSuccessful()) {
             throw new ConnectorException(response.errorBody().string());
         }
-        setOutputParameter(STATUS_CODE_OUTPUT, response.code());
-        setOutputParameter(STATUS_MESSAGE_OUTPUT, response.message());
         return response.body();
     }
 

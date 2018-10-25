@@ -176,8 +176,6 @@ public class UIPathStartJobsConnector extends UIPathConnector {
                 throw new ConnectorException("Failed to read response body.", e);
             }
         }
-        setOutputParameter(STATUS_CODE_OUTPUT, response.code());
-        setOutputParameter(STATUS_MESSAGE_OUTPUT, response.message());
         return response.body();
     }
 
