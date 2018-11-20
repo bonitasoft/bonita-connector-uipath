@@ -4,8 +4,8 @@
   <version>1.0.0</version>
   <icon>uipath.png</icon>
   <category icon="rpa.png" id="RPA"/>
-  <input mandatory="true" name="url" type="java.lang.String"/>
-  <input mandatory="true" name="tenant" type="java.lang.String"/>
+  <input mandatory="true" name="url" type="java.lang.String" defaultValue="https://demo.uipath.com/"/>
+  <input mandatory="true" name="tenant" type="java.lang.String" defaultValue="Default"/>
   <input mandatory="true" name="user" type="java.lang.String"/>
   <input mandatory="true" name="password" type="java.lang.String"/>
   <input mandatory="true" name="processName" type="java.lang.String"/>
