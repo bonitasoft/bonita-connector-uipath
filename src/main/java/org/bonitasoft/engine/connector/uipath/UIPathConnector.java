@@ -9,6 +9,7 @@ import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.bonitasoft.engine.connector.uipath.converters.WrappedAttributeConverter;
+import org.bonitasoft.engine.connector.uipath.model.CloudAuthentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public abstract class UIPathConnector extends AbstractConnector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UIPathConnector.class.getName());
-    private static final String CLOUD_ORCHESTRATOR_BASE_URL = "https://platform.uipath.com/";
+    private static final String CLOUD_ORCHESTRATOR_BASE_URL = "https://platform.uipath.com";
     private static final String HEADER_TENANT_NAME = "X-UIPATH-TenantName";
     private static final String HEADER_AUTHORIZATION_NAME = "Authorization";
 
@@ -106,8 +107,10 @@ public abstract class UIPathConnector extends AbstractConnector {
             if (isCloud()) {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json");
-                headers.put(HEADER_TENANT_NAME, getTenant());
-                response = service.authenticateInCloud(headers, "refresh_token", getClientId(), getUserKey()).execute();
+                headers.put(HEADER_TENANT_NAME, getTenantLogicalName());
+                CloudAuthentication cloudAuthentication = new CloudAuthentication("refresh_token", getClientId(),
+                        getUserKey());
+                response = service.authenticateInCloud(headers, cloudAuthentication).execute();
             } else {
                 response = service.authenticate(getTenant(), getUser(), getPassword()).execute();
             }
@@ -133,7 +136,7 @@ public abstract class UIPathConnector extends AbstractConnector {
         Map<String, String> headers = new HashMap<>();
         headers.put(HEADER_AUTHORIZATION_NAME, buildTokenHeader(token));
         if (isCloud()) {
-            headers.put(HEADER_TENANT_NAME, TENANT_LOGICAL_NAME);
+            headers.put(HEADER_TENANT_NAME, getTenantLogicalName());
         }
         return headers;
     }
@@ -179,6 +182,10 @@ public abstract class UIPathConnector extends AbstractConnector {
         return (String) getInputParameter(TENANT);
     }
 
+    String getTenantLogicalName() {
+        return (String) getInputParameter(TENANT_LOGICAL_NAME);
+    }
+
     String getUser() {
         return (String) getInputParameter(USER);
     }
@@ -189,7 +196,7 @@ public abstract class UIPathConnector extends AbstractConnector {
 
     String getUrl() {
         return isCloud()
-                ? String.format("%s/%s/%s/", CLOUD_ORCHESTRATOR_BASE_URL, ACCOUNT_LOGICAL_NAME, TENANT_LOGICAL_NAME)
+                ? String.format("%s/%s/%s", CLOUD_ORCHESTRATOR_BASE_URL, getAccountLogicalName(), getTenantLogicalName())
                 : (String) getInputParameter(URL);
     }
 

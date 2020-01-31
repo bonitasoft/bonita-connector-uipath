@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
+import org.bonitasoft.engine.connector.uipath.model.CloudAuthentication;
 import org.bonitasoft.engine.connector.uipath.model.Job;
 import org.bonitasoft.engine.connector.uipath.model.JobRequest;
 import org.bonitasoft.engine.connector.uipath.model.QueueItem;
@@ -41,25 +42,22 @@ public interface UIPathService {
             @Field("usernameOrEmailAddress") String user,
             @Field("password") String password);
 
-    @FormUrlEncoded
     @POST("https://account.uipath.com/oauth/token")
     Call<Map<String, String>> authenticateInCloud(@HeaderMap Map<String, String> headers,
-            @Field("grant_type") String grantType,
-            @Field("client_id") String clientId,
-            @Field("refresh_token") String userKey);
+            @Body CloudAuthentication cloudAuthentication);
 
-    @GET("/odata/Releases")
+    @GET("odata/Releases")
     Call<List<Release>> releases(@HeaderMap Map<String, String> headers);
 
-    @GET("/odata/Robots")
+    @GET("odata/Robots")
     Call<List<Robot>> robots(@HeaderMap Map<String, String> headers);
 
-    @POST("/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs")
+    @POST("odata/Jobs/UiPath.Server.Configuration.OData.StartJobs")
     Call<List<Job>> startJob(@HeaderMap Map<String, String> headers, @Body JobRequest jobRequest);
 
     @GET("odata/Jobs({Id})")
     Call<Job> job(@HeaderMap Map<String, String> headers, @Path("Id") long id);
 
-    @POST("/odata/Queues/UiPathODataSvc.AddQueueItem")
+    @POST("odata/Queues/UiPathODataSvc.AddQueueItem")
     Call<QueueItem> addQueueItem(@HeaderMap Map<String, String> headers, @Body AddToQueueRequest request);
 }

@@ -180,6 +180,8 @@ public class UIPathStartJobsConnector extends UIPathConnector {
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
         String token = authenticate();
+        System.out.println("TOKEN:");
+        System.out.println(token);
         List<Release> releases = releases(token);
         List<Release> processReleases = releases.stream()
                 .filter(r -> Objects.equals(r.getProcessKey(), getProcessName()))
