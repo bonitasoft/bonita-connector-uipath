@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>bonita-connector-uipath</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
 
     <properties>
         <bonita.engine.version>7.7.0</bonita.engine.version>
@@ -179,7 +179,7 @@
         <developerConnection>scm:git:https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@github.com/bonitasoft/bonita-connector-uipath.git</developerConnection>
         <connection>scm:git:https://${env.GIT_USERNAME}:${env.GIT_PASSWORD}@github.com/bonitasoft/bonita-connector-uipath.git</connection>
         <url>https://github.com/bonitasoft/bonita-connector-uipath</url>
-        <tag>2.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
