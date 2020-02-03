@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.engine.connector.uipath;
 
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -111,7 +110,6 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         return Optional.ofNullable((Map) getInputParameter(INPUT_ARGS));
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     void checkArgsInput() throws ConnectorValidationException {
         Optional<Map> inputArguments = getInputArguments();
         if (inputArguments.isPresent()) {
@@ -163,7 +161,7 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         Response<List<Job>> response;
         try {
             response = getService()
-                    .startJob(buildTokenHeader(token), new JobRequest().setStartInfo(startInfo))
+                    .startJob(createAuthenticationHeaders(token), new JobRequest().setStartInfo(startInfo))
                     .execute();
         } catch (IOException e) {
             throw new ConnectorException("Failed to start job.", e);
@@ -181,47 +179,49 @@ public class UIPathStartJobsConnector extends UIPathConnector {
 
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
-            String token = authenticate();
-            List<Release> releases = releases(token);
-            List<Release> processReleases = releases.stream()
-                    .filter(r -> Objects.equals(r.getProcessKey(), getProcessName()))
-                    .collect(Collectors.toList());
-            if (processReleases.isEmpty()) {
-                throw new ConnectorException(
-                        String.format("No release found for process %s.", getProcessName()));
-            }
-            getProcessVersion()
-                    .ifPresent(version -> processReleases.removeIf(r -> !Objects.equals(version, r.getProcessVersion())));
-            if (processReleases.isEmpty()) {
-                throw new ConnectorException(
-                        String.format("No release found for process %s and version %s.", getProcessName(),
-                                getProcessVersion().orElse("Unknown")));
-            }
-            Release release = processReleases.get(0);
-            if (!getProcessVersion().isPresent() && release.getCurrentVersion() != null) {
-                long currentRelease = release.getCurrentVersion().getReleaseId();
-                release = processReleases.stream().filter(r -> r.getId() == currentRelease).findFirst()
-                        .orElseThrow(() -> new ConnectorException(
-                                String.format("No release found with id %s for process %s", currentRelease,
-                                        getProcessName())));
-            }
-            List<Robot> robots = robots(token);
-            List<Integer> robotIds = robots.stream()
-                    .filter(r -> getRobots().orElse(Collections.emptyList()).contains(r.getName()))
-                    .map(Robot::getId)
-                    .collect(Collectors.toList());
+        String token = authenticate();
+        System.out.println("TOKEN:");
+        System.out.println(token);
+        List<Release> releases = releases(token);
+        List<Release> processReleases = releases.stream()
+                .filter(r -> Objects.equals(r.getProcessKey(), getProcessName()))
+                .collect(Collectors.toList());
+        if (processReleases.isEmpty()) {
+            throw new ConnectorException(
+                    String.format("No release found for process %s.", getProcessName()));
+        }
+        getProcessVersion()
+                .ifPresent(version -> processReleases.removeIf(r -> !Objects.equals(version, r.getProcessVersion())));
+        if (processReleases.isEmpty()) {
+            throw new ConnectorException(
+                    String.format("No release found for process %s and version %s.", getProcessName(),
+                            getProcessVersion().orElse("Unknown")));
+        }
+        Release release = processReleases.get(0);
+        if (!getProcessVersion().isPresent() && release.getCurrentVersion() != null) {
+            long currentRelease = release.getCurrentVersion().getReleaseId();
+            release = processReleases.stream().filter(r -> r.getId() == currentRelease).findFirst()
+                    .orElseThrow(() -> new ConnectorException(
+                            String.format("No release found with id %s for process %s", currentRelease,
+                                    getProcessName())));
+        }
+        List<Robot> robots = robots(token);
+        List<Integer> robotIds = robots.stream()
+                .filter(r -> getRobots().orElse(Collections.emptyList()).contains(r.getName()))
+                .map(Robot::getId)
+                .collect(Collectors.toList());
 
-            List<String> output = startJobs(token, release, robotIds).stream()
-                    .map(this::toJSON)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-            setOutputParameter(STARTED_JOBS_OUTPUT, output);
+        List<String> output = startJobs(token, release, robotIds).stream()
+                .map(this::toJSON)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        setOutputParameter(STARTED_JOBS_OUTPUT, output);
     }
 
     List<Release> releases(String token) throws ConnectorException {
         Response<List<Release>> response;
         try {
-            response = getService().releases(buildTokenHeader(token)).execute();
+            response = getService().releases(createAuthenticationHeaders(token)).execute();
         } catch (IOException e) {
             throw new ConnectorException("Failed to retrieve releases.", e);
         }
@@ -235,11 +235,10 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         return response.body();
     }
 
-
     List<Robot> robots(String token) throws ConnectorException {
         Response<List<Robot>> response;
         try {
-            response = getService().robots(buildTokenHeader(token)).execute();
+            response = getService().robots(createAuthenticationHeaders(token)).execute();
         } catch (IOException e) {
             throw new ConnectorException("Failed to retrieve robots.", e);
         }

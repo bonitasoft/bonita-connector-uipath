@@ -9,6 +9,7 @@ import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.bonitasoft.engine.connector.uipath.converters.WrappedAttributeConverter;
+import org.bonitasoft.engine.connector.uipath.model.CloudAuthentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,21 +25,53 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public abstract class UIPathConnector extends AbstractConnector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UIPathConnector.class.getName());
+    private static final String CLOUD_ORCHESTRATOR_BASE_URL = "https://platform.uipath.com";
+    private static final String HEADER_TENANT_NAME = "X-UIPATH-TenantName";
+    private static final String HEADER_AUTHORIZATION_NAME = "Authorization";
 
+    static final String CLOUD = "cloud";
+
+    // classic parameters
     static final String URL = "url";
     static final String USER = "user";
     static final String PASSWORD = "password";
     static final String TENANT = "tenant";
+
+    // cloud parameters
+    static final String ACCOUNT_LOGICAL_NAME = "accountLogicalName";
+    static final String TENANT_LOGICAL_NAME = "tenantLogicalName";
+    static final String USER_KEY = "userKey";
+    static final String CLIENT_ID = "clientId";
 
     protected UIPathService service;
     protected ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
-        checkMandatoryStringInput(URL);
-        checkMandatoryStringInput(TENANT);
-        checkMandatoryStringInput(USER);
-        checkMandatoryStringInput(PASSWORD);
+        checkcloudInput();
+        if (isCloud()) {
+            checkMandatoryStringInput(ACCOUNT_LOGICAL_NAME);
+            checkMandatoryStringInput(TENANT_LOGICAL_NAME);
+            checkMandatoryStringInput(USER_KEY);
+            checkMandatoryStringInput(CLIENT_ID);
+        } else {
+            checkMandatoryStringInput(URL);
+            checkMandatoryStringInput(TENANT);
+            checkMandatoryStringInput(USER);
+            checkMandatoryStringInput(PASSWORD);
+        }
+    }
+
+    protected void checkcloudInput() throws ConnectorValidationException {
+        Boolean value = null;
+        try {
+            value = (Boolean) getInputParameter(CLOUD);
+        } catch (ClassCastException e) {
+            throw new ConnectorValidationException(this, String.format("'%s' parameter must be a Boolean", CLOUD));
+        }
+        if (value == null) {
+            throw new ConnectorValidationException(this, String.format("Mandatory parameter '%s' is missing.", CLOUD));
+        }
     }
 
     protected void checkMandatoryStringInput(String input) throws ConnectorValidationException {
@@ -71,8 +104,16 @@ public abstract class UIPathConnector extends AbstractConnector {
     String authenticate() throws ConnectorException {
         Response<Map<String, String>> response;
         try {
-            response = service.authenticate(getTenant(), getUser(), getPassword())
-                    .execute();
+            if (isCloud()) {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put(HEADER_TENANT_NAME, getTenantLogicalName());
+                CloudAuthentication cloudAuthentication = new CloudAuthentication("refresh_token", getClientId(),
+                        getUserKey());
+                response = service.authenticateInCloud(headers, cloudAuthentication).execute();
+            } else {
+                response = service.authenticate(getTenant(), getUser(), getPassword()).execute();
+            }
         } catch (IOException e) {
             throw new ConnectorException(
                     String.format("Failed to authenticate to '%s' on tenant '%s' with user '%s'", getUrl(), getTenant(),
@@ -86,7 +127,18 @@ public abstract class UIPathConnector extends AbstractConnector {
                 throw new ConnectorException("Failed to read response body.", e);
             }
         }
-        return response.body().get("result");
+        return isCloud()
+                ? response.body().get("access_token")
+                : response.body().get("result");
+    }
+
+    protected Map<String, String> createAuthenticationHeaders(String token) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(HEADER_AUTHORIZATION_NAME, buildTokenHeader(token));
+        if (isCloud()) {
+            headers.put(HEADER_TENANT_NAME, getTenantLogicalName());
+        }
+        return headers;
     }
 
     protected UIPathService createService() {
@@ -112,7 +164,6 @@ public abstract class UIPathConnector extends AbstractConnector {
         return service;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected Map<Object, Object> toMap(Object inputParameter) {
         Map<Object, Object> result = new HashMap<>();
         for (Object row : (Iterable) inputParameter) {
@@ -131,6 +182,10 @@ public abstract class UIPathConnector extends AbstractConnector {
         return (String) getInputParameter(TENANT);
     }
 
+    String getTenantLogicalName() {
+        return (String) getInputParameter(TENANT_LOGICAL_NAME);
+    }
+
     String getUser() {
         return (String) getInputParameter(USER);
     }
@@ -140,7 +195,25 @@ public abstract class UIPathConnector extends AbstractConnector {
     }
 
     String getUrl() {
-        return (String) getInputParameter(URL);
+        return isCloud()
+                ? String.format("%s/%s/%s", CLOUD_ORCHESTRATOR_BASE_URL, getAccountLogicalName(), getTenantLogicalName())
+                : (String) getInputParameter(URL);
+    }
+
+    Boolean isCloud() {
+        return (Boolean) getInputParameter(CLOUD);
+    }
+
+    String getAccountLogicalName() {
+        return (String) getInputParameter(ACCOUNT_LOGICAL_NAME);
+    }
+
+    String getClientId() {
+        return (String) getInputParameter(CLIENT_ID);
+    }
+
+    String getUserKey() {
+        return (String) getInputParameter(USER_KEY);
     }
 
 }

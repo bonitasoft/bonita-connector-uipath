@@ -3,7 +3,7 @@
   <implementationId>uipath-getjob-impl</implementationId>
   <implementationVersion>$implementation.version$</implementationVersion>
   <definitionId>uipath-getjob</definitionId>
-  <definitionVersion>1.0.0</definitionVersion>
+  <definitionVersion>2.0.0</definitionVersion>
   <implementationClassname>org.bonitasoft.engine.connector.uipath.UIPathGetJobConnector</implementationClassname>
   <hasSources>false</hasSources>
   <description>The implementation of the get job UiPath Connector.</description>

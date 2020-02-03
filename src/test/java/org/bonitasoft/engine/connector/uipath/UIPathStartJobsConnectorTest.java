@@ -157,6 +157,7 @@ public class UIPathStartJobsConnectorTest {
     private UIPathStartJobsConnector createConnector() throws Exception {
         UIPathStartJobsConnector uiPathConnector = spy(new UIPathStartJobsConnector());
         Map<String, Object> parameters = new HashMap<>();
+        parameters.put(UIPathConnector.CLOUD, false);
         parameters.put(UIPathConnector.URL, "http://localhost:8888");
         parameters.put(UIPathConnector.TENANT, "a_tenant");
         parameters.put(UIPathConnector.USER, "admin");

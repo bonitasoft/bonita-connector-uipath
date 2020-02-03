@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
   <id>uipath-startjob</id>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <icon>uipath.png</icon>
   <category icon="rpa.png" id="RPA"/>
-  <input mandatory="true" name="url" type="java.lang.String" defaultValue="https://demo.uipath.com/"/>
-  <input mandatory="true" name="tenant" type="java.lang.String" defaultValue="Default"/>
-  <input mandatory="true" name="user" type="java.lang.String"/>
-  <input mandatory="true" name="password" type="java.lang.String"/>
+  <input mandatory="true" name="cloud" type="java.lang.Boolean" defaultValue="false"/>
+  <input name="url" type="java.lang.String" defaultValue="https://demo.uipath.com/"/>
+  <input name="tenant" type="java.lang.String" defaultValue="Default"/>
+  <input name="user" type="java.lang.String"/>
+  <input name="password" type="java.lang.String"/>
+  <input name="accountLogicalName" type="java.lang.String"/>
+  <input name="tenantLogicalName" type="java.lang.String"/>
+  <input name="userKey" type="java.lang.String"/>
+  <input name="clientId" type="java.lang.String"/>
+  
   <input mandatory="true" name="processName" type="java.lang.String"/>
   <input name="processVersion" type="java.lang.String"/>
   <input name="strategy" type="java.lang.String" defaultValue="All"/>

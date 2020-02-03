@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
   <id>uipath-add-queueItem</id>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <icon>uipath.png</icon>
   <category icon="rpa.png" id="RPA"/>
-  <input mandatory="true" name="url" type="java.lang.String" defaultValue="https://demo.uipath.com/"/>
-  <input mandatory="true" name="tenant" type="java.lang.String" defaultValue="Default"/>
-  <input mandatory="true" name="user" type="java.lang.String"/>
-  <input mandatory="true" name="password" type="java.lang.String"/>
-  <input mandatory="true" name="queueName" type="java.lang.String"/>
+  <input mandatory="true" name="cloud" type="java.lang.Boolean" defaultValue="false"/>
+  <input name="url" type="java.lang.String" defaultValue="https://demo.uipath.com/"/>
+  <input name="tenant" type="java.lang.String" defaultValue="Default"/>
+  <input name="user" type="java.lang.String"/>
+  <input name="password" type="java.lang.String"/>
+  <input name="accountLogicalName" type="java.lang.String"/>
+  <input name="tenantLogicalName" type="java.lang.String"/>
+  <input name="userKey" type="java.lang.String"/>
+  <input name="clientId" type="java.lang.String"/>
+  
+  <input name="queueName" type="java.lang.String"/>
   <input name="reference" type="java.lang.String"/>
   <input name="queueContent" type="java.util.Map"/>
   <input name="priority" type="java.lang.String" defaultValue="Normal" />
@@ -23,6 +29,10 @@
     <widget xsi:type="definition:Text" id="tenantWidget" inputName="tenant"/>
     <widget xsi:type="definition:Text" id="userWidget" inputName="user"/>
     <widget xsi:type="definition:Password" id="passwordWidget" inputName="password"/>
+    <widget xsi:type="definition:Text" id="accountLogicalNameWidget" inputName="accountLogicalName"/>
+    <widget xsi:type="definition:Text" id="tenantLogicalNameWidget" inputName="tenantLogicalName"/>
+    <widget xsi:type="definition:Text" id="userKeyWidget" inputName="userKey"/>
+    <widget xsi:type="definition:Password" id="clientIdWidget" inputName="clientId"/>
   </page>
   <page id="configurationPage">
     <widget xsi:type="definition:Text" id="queueNameWidget" inputName="queueName"/>

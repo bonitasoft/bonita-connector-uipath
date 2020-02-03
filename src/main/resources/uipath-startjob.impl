@@ -3,7 +3,7 @@
   <implementationId>uipath-startjob-impl</implementationId>
   <implementationVersion>$implementation.version$</implementationVersion>
   <definitionId>uipath-startjob</definitionId>
-  <definitionVersion>1.0.0</definitionVersion>
+  <definitionVersion>2.0.0</definitionVersion>
   <implementationClassname>org.bonitasoft.engine.connector.uipath.UIPathStartJobsConnector</implementationClassname>
   <hasSources>false</hasSources>
   <description>The implementation of the start jobs UiPath Connector.</description>

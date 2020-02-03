@@ -59,7 +59,7 @@ public class UIPathGetJobConnector extends UIPathConnector {
     }
 
     Job job(long id, String token) throws IOException, ConnectorException {
-        Response<Job> response = getService().job(buildTokenHeader(token), id).execute();
+        Response<Job> response = getService().job(createAuthenticationHeaders(token), id).execute();
         if (!response.isSuccessful()) {
             throw new ConnectorException(response.errorBody().string());
         }

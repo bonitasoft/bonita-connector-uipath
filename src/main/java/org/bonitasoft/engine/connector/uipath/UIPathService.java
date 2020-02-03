@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
+import org.bonitasoft.engine.connector.uipath.model.CloudAuthentication;
 import org.bonitasoft.engine.connector.uipath.model.Job;
 import org.bonitasoft.engine.connector.uipath.model.JobRequest;
 import org.bonitasoft.engine.connector.uipath.model.QueueItem;
@@ -29,7 +30,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -41,18 +42,22 @@ public interface UIPathService {
             @Field("usernameOrEmailAddress") String user,
             @Field("password") String password);
 
-    @GET("/odata/Releases")
-    Call<List<Release>> releases(@Header("Authorization") String token);
+    @POST("https://account.uipath.com/oauth/token")
+    Call<Map<String, String>> authenticateInCloud(@HeaderMap Map<String, String> headers,
+            @Body CloudAuthentication cloudAuthentication);
 
-    @GET("/odata/Robots")
-    Call<List<Robot>> robots(@Header("Authorization") String token);
+    @GET("odata/Releases")
+    Call<List<Release>> releases(@HeaderMap Map<String, String> headers);
 
-    @POST("/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs")
-    Call<List<Job>> startJob(@Header("Authorization") String token, @Body JobRequest jobRequest);
+    @GET("odata/Robots")
+    Call<List<Robot>> robots(@HeaderMap Map<String, String> headers);
+
+    @POST("odata/Jobs/UiPath.Server.Configuration.OData.StartJobs")
+    Call<List<Job>> startJob(@HeaderMap Map<String, String> headers, @Body JobRequest jobRequest);
 
     @GET("odata/Jobs({Id})")
-    Call<Job> job(@Header("Authorization") String token, @Path("Id") long id);
+    Call<Job> job(@HeaderMap Map<String, String> headers, @Path("Id") long id);
 
-    @POST("/odata/Queues/UiPathODataSvc.AddQueueItem")
-    Call<QueueItem> addQueueItem(@Header("Authorization") String token, @Body AddToQueueRequest request);
+    @POST("odata/Queues/UiPathODataSvc.AddQueueItem")
+    Call<QueueItem> addQueueItem(@HeaderMap Map<String, String> headers, @Body AddToQueueRequest request);
 }
