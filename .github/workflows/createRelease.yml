@@ -57,3 +57,11 @@ jobs:
           asset_path: target/bonita-connector-uipath-${{ steps.extract_version.outputs.version }}-all.zip
           asset_name: bonita-connector-uipath-${{ steps.extract_version.outputs.version }}-all.zip
           asset_content_type: application/zip
+          
+      - name: Release Maven archetype
+        uses: samuelmeuli/action-maven-publish@v1
+        with:
+          gpg_private_key: ${{ secrets.gpg_private_key }}
+          gpg_passphrase: ${{ secrets.gpg_passphrase }}
+          nexus_username: ${{ secrets.ossrh_username }}
+          nexus_password: ${{ secrets.ossrh_password }}
