@@ -7,6 +7,27 @@
 	<artifactId>bonita-connector-uipath</artifactId>
 	<version>2.1.0-SNAPSHOT</version>
 
+	<name>Bonita UIPath Connector</name>
+	<description>UIPath Connector for Bonita</description>
+	<url>https://www.bonitasoft.com</url>
+
+	<developers>
+		<developer>
+			<id>bonitasoft</id>
+			<name>Bonitasoft</name>
+			<email>rd.user@bonitasoft.com</email>
+			<organization>Bonitasoft</organization>
+			<organizationUrl>https://www.bonitasoft.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>GPL-v2.0</name>
+			<url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+		</license>
+	</licenses>
+
 	<properties>
 		<!-- Maven -->
 		<java.version>1.8</java.version>
@@ -20,21 +41,21 @@
 		<uipath-add-queueItem.impl.id>${uipath-add-queueItem.def.id}-impl</uipath-add-queueItem.impl.id>
 		<uipath-add-queueItem.impl.version>${project.version}</uipath-add-queueItem.impl.version>
 		<uipath-add-queueItem.main-class>org.bonitasoft.engine.connector.uipath.UIPathAddToQueueConnector</uipath-add-queueItem.main-class>
-		
+
 		<!--Get Job Connector -->
 		<uipath-getjob.def.id>uipath-getjob</uipath-getjob.def.id>
 		<uipath-getjob.def.version>2.0.0</uipath-getjob.def.version>
 		<uipath-getjob.impl.id>${uipath-getjob.def.id}-impl</uipath-getjob.impl.id>
 		<uipath-getjob.impl.version>${project.version}</uipath-getjob.impl.version>
 		<uipath-getjob.main-class>org.bonitasoft.engine.connector.uipath.UIPathGetJobConnector</uipath-getjob.main-class>
-		
+
 		<!--Start Job Connector -->
 		<uipath-startjob.def.id>uipath-startjob</uipath-startjob.def.id>
 		<uipath-startjob.def.version>2.0.0</uipath-startjob.def.version>
 		<uipath-startjob.impl.id>${uipath-startjob.def.id}-impl</uipath-startjob.impl.id>
 		<uipath-startjob.impl.version>${project.version}</uipath-startjob.impl.version>
 		<uipath-startjob.main-class>org.bonitasoft.engine.connector.uipath.UIPathStartJobsConnector</uipath-startjob.main-class>
-		
+
 		<!-- Connector dependencies -->
 		<retrofit.version>2.9.0</retrofit.version>
 		<logging-interceptor.version>3.11.0</logging-interceptor.version>
@@ -61,11 +82,12 @@
 		<groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
 		<groovy-all.version>2.4.16</groovy-all.version>
 		<maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
-		
+		<nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+
 		<!-- Sonar -->
-		 <sonar.projectKey>bonitasoft_bonita-connector-uipath</sonar.projectKey>
- 		 <sonar.organization>bonitasoft</sonar.organization>
-  		 <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.projectKey>bonitasoft_bonita-connector-uipath</sonar.projectKey>
+		<sonar.organization>bonitasoft</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<dependencies>
@@ -198,7 +220,6 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -250,6 +271,17 @@
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>${sonar-maven-plugin.version}</version>
 				</plugin>
+				<plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus-staging-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -280,5 +312,52 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<!-- Deployment profile (required so these plugins are only used when deploying) -->
+		<profile>
+			<id>deploy</id>
+			<build>
+				<plugins>
+					<!-- GPG plugin -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<!-- Prevent `gpg` from using pinentry programs -->
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<distributionManagement>
+		<!-- Central Repository -->
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<scm>
+		<developerConnection>scm:git:git@github.com:bonitasoft/bonita-connector-uipath.git</developerConnection>
+		<connection>scm:git:git@github.com:bonitasoft/bonita-connector-uipath.git</connection>
+		<url>https://github.com/bonitasoft/bonita-connector-uipath</url>
+		<tag>HEAD</tag>
+	</scm>
 
 </project>
