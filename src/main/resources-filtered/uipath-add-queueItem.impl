@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
+  <implementationId>${uipath-add-queueItem.impl.id}</implementationId>
+  <implementationVersion>${uipath-add-queueItem.impl.version}</implementationVersion>
+  <definitionId>${uipath-add-queueItem.def.id}</definitionId>
+  <definitionVersion>${uipath-add-queueItem.def.version}</definitionVersion>
+  <implementationClassname>${uipath-add-queueItem.main-class}</implementationClassname>
+  <hasSources>false</hasSources>
+  <description>The implementation of the add to queue UiPath Connector.</description>
+
+<!-- retrieved from the pom.xml at build time -->
+${connector-dependencies}
+
+</implementation:connectorImplementation>

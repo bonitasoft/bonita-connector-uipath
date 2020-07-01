@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UIPathConnectorTest {
 

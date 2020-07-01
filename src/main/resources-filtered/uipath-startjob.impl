@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
+  <implementationId>${uipath-startjob.impl.id}</implementationId>
+  <implementationVersion>${uipath-startjob.impl.version}</implementationVersion>
+  <definitionId>${uipath-startjob.def.id}</definitionId>
+  <definitionVersion>${uipath-startjob.def.version}</definitionVersion>
+  <implementationClassname>${uipath-startjob.main-class}</implementationClassname>
+  <hasSources>false</hasSources>
+  <description>The implementation of the start jobs UiPath Connector.</description>
+
+<!-- retrieved from the pom.xml at build time -->
+${connector-dependencies}
+
+</implementation:connectorImplementation>
