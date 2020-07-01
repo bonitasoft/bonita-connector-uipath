@@ -21,24 +21,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.engine.connector.uipath.model.JobState;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public class UIPathGetJobConnectorTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    private static WireMockRule uiPathService;
 
-    @ClassRule
-    public static WireMockRule uiPathService = new WireMockRule(8888);
+    @BeforeAll
+    public static void startMockServer() {
+         uiPathService = new WireMockRule(8888);
+         uiPathService.start();
+    }
+    
+    @AfterAll
+    public static void stopMockServer() {
+        uiPathService.stop();
+   }
 
-    @Before
+    @BeforeEach
     public void configureStubs() throws Exception {
         uiPathService.stubFor(WireMock.post(WireMock.urlEqualTo("/api/account/authenticate"))
                 .willReturn(WireMock.aResponse()

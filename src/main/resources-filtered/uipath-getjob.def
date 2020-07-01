@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
-  <id>uipath-getjob</id>
-  <version>2.0.0</version>
+  <id>${uipath-getjob.def.id}</id>
+  <version>${uipath-getjob.def.version}</version>
   <icon>uipath.png</icon>
   <category icon="rpa.png" id="RPA"/>
   

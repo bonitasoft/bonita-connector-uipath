@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
-  <id>uipath-startjob</id>
-  <version>2.0.0</version>
+  <id>${uipath-startjob.def.id}</id>
+  <version>${uipath-startjob.def.version}</version>
   <icon>uipath.png</icon>
   <category icon="rpa.png" id="RPA"/>
   <input mandatory="true" name="cloud" type="java.lang.Boolean" defaultValue="false"/>

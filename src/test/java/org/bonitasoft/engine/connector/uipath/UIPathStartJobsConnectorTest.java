@@ -24,29 +24,33 @@ import java.util.Map;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.bonitasoft.engine.connector.uipath.model.Release;
 import org.bonitasoft.engine.connector.uipath.model.Robot;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import lombok.Data;
 
-@RunWith(MockitoJUnitRunner.class)
 public class UIPathStartJobsConnectorTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    public static WireMockRule uiPathService;
+    
+    @BeforeAll
+    public static void startMockServer() {
+         uiPathService = new WireMockRule(8888);
+         uiPathService.start();
+    }
+    
+    @AfterAll
+    public static void stopMockServer() {
+        uiPathService.stop();
+   }
 
-    @ClassRule
-    public static WireMockRule uiPathService = new WireMockRule(8888);
-
-    @Before
+    @BeforeEach
     public void configureStubs() throws Exception {
         uiPathService.stubFor(WireMock.post(WireMock.urlEqualTo("/api/account/authenticate"))
                 .willReturn(WireMock.aResponse()
@@ -108,10 +112,10 @@ public class UIPathStartJobsConnectorTest {
         UIPathConnector uiPathConnector = createConnector();
         uiPathConnector.connect();
         Map<String, Object> outputs = uiPathConnector.execute();
-        List<String> startedJobs = (List<String>) outputs.get("startedJobs");
-
-        assertThat(startedJobs).hasSize(1);
-        String job = startedJobs.get(0);
+        Object startedJobs = outputs.get("startedJobs");
+        assertThat(startedJobs).isInstanceOf(List.class);
+        assertThat((List<?>)startedJobs).hasSize(1);
+        String job = (String) ((List<?>) startedJobs).get(0);
 
         assertThat(job).contains("54");
     }
@@ -125,11 +129,10 @@ public class UIPathStartJobsConnectorTest {
         inputArgs.put(1, "value2");
         inputs.put(UIPathStartJobsConnector.INPUT_ARGS, inputArgs);
         uiPathConnector.setInputParameters(inputs);
-
-        expectedException.expect(ConnectorValidationException.class);
-        expectedException.expectMessage("Only String keys are allowed in job input arguments. Found [1].");
-
-        uiPathConnector.checkArgsInput();
+        
+        Assert.assertThrows("Only String keys are allowed in job input arguments. Found [1].", 
+                ConnectorValidationException.class, 
+        () -> uiPathConnector.checkArgsInput());
     }
 
 
