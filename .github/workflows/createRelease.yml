@@ -44,9 +44,14 @@ jobs:
           draft: false
           prerelease: false
           
-      - name: Build Release
-        run: ./mvnw -B verify
-          
+      - name: Release Maven archetype
+        uses: samuelmeuli/action-maven-publish@v1
+        with:
+          gpg_private_key: ${{ secrets.gpg_private_key }}
+          gpg_passphrase: ${{ secrets.gpg_passphrase }}
+          nexus_username: ${{ secrets.ossrh_username }}
+          nexus_password: ${{ secrets.ossrh_password }}
+  
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
@@ -58,10 +63,3 @@ jobs:
           asset_name: bonita-connector-uipath-${{ steps.extract_version.outputs.version }}-all.zip
           asset_content_type: application/zip
           
-      - name: Release Maven archetype
-        uses: samuelmeuli/action-maven-publish@v1
-        with:
-          gpg_private_key: ${{ secrets.gpg_private_key }}
-          gpg_passphrase: ${{ secrets.gpg_passphrase }}
-          nexus_username: ${{ secrets.ossrh_username }}
-          nexus_password: ${{ secrets.ossrh_password }}
