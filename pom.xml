@@ -40,7 +40,7 @@
 		<impl-id>${definition-id}-impl</impl-id>
 		<impl-version>${project.version}</impl-version>
 		<impl-main-class>org.bonitasoft.actorfilter.UsersListFilter</impl-main-class>
-		<retrofit.version>2.4.0</retrofit.version>
+		<retrofit.version>2.9.0</retrofit.version>
 		<logging-interceptor.version>3.11.0</logging-interceptor.version>
 		<lombok.version>1.18.2</lombok.version>
 
