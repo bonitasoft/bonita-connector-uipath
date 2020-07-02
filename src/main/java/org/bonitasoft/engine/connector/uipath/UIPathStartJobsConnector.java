@@ -102,29 +102,29 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         return Optional.ofNullable((String) getInputParameter(STRATEGY));
     }
 
-    Optional<Map> getInputArguments() {
+    Optional<Map<Object, Object>> getInputArguments() {
         Object inputParameter = getInputParameter(INPUT_ARGS);
         if (inputParameter instanceof List) {
             return Optional.of(toMap(inputParameter));
         }
-        return Optional.ofNullable((Map) getInputParameter(INPUT_ARGS));
+        return Optional.ofNullable((Map<Object, Object>) getInputParameter(INPUT_ARGS));
     }
 
     void checkArgsInput() throws ConnectorValidationException {
-        Optional<Map> inputArguments = getInputArguments();
+        Optional<Map<Object, Object>> inputArguments = getInputArguments();
         if (inputArguments.isPresent()) {
-            Map map = inputArguments.get();
-            Set nonStringKeys = (Set) map.keySet().stream().filter(key -> !(key instanceof String))
+            Map<Object, Object> map = inputArguments.get();
+            Set<?> nonStringKeys = map.keySet().stream().filter(key -> !(key instanceof String))
                     .collect(Collectors.toSet());
             if (!nonStringKeys.isEmpty()) {
                 throw new ConnectorValidationException(
                         String.format("Only String keys are allowed in job input arguments. Found %s.", nonStringKeys));
             }
-            Set nonSerializableValue = (Set) map.values().stream().filter(value -> {
+            Set<?> nonSerializableValue = map.values().stream().filter(value -> {
                 try {
                     mapper.writeValueAsString(value);
                     return false;
-                } catch (Throwable t) {
+                } catch (Exception e) {
                     return true;
                 }
             }).collect(Collectors.toSet());
@@ -136,8 +136,8 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         }
     }
 
-    private Map<String, Object> handleInputArgs() {
-        return getInputArguments().orElse(new HashMap<String, Object>());
+    private Map<Object, Object> handleInputArgs() {
+        return getInputArguments().orElse(new HashMap<>());
     }
 
     List<Job> startJobs(String token, Release release, List<Integer> robotIds)
@@ -167,12 +167,10 @@ public class UIPathStartJobsConnector extends UIPathConnector {
             throw new ConnectorException("Failed to start job.", e);
         }
         if (!response.isSuccessful()) {
-            LOGGER.error(response.toString());
-            try {
-                throw new ConnectorException(response.errorBody().string());
-            } catch (IOException e) {
-                throw new ConnectorException("Failed to read response body.", e);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(response.toString());
             }
+            throw new ConnectorException("Failed to start job: " + response.message());
         }
         return response.body();
     }
@@ -224,11 +222,7 @@ public class UIPathStartJobsConnector extends UIPathConnector {
             throw new ConnectorException("Failed to retrieve releases.", e);
         }
         if (!response.isSuccessful()) {
-            try {
-                throw new ConnectorException(response.errorBody().string());
-            } catch (IOException e) {
-                throw new ConnectorException("Failed to read response body.", e);
-            }
+            throw new ConnectorException("Failed to retrieve releases: " + response.message());
         }
         return response.body();
     }
@@ -241,11 +235,7 @@ public class UIPathStartJobsConnector extends UIPathConnector {
             throw new ConnectorException("Failed to retrieve robots.", e);
         }
         if (!response.isSuccessful()) {
-            try {
-                throw new ConnectorException(response.errorBody().string());
-            } catch (IOException e) {
-                throw new ConnectorException("Failed to read response body.", e);
-            }
+            throw new ConnectorException("Failed to retrieve robots: " + response.message());
         }
         return response.body();
     }

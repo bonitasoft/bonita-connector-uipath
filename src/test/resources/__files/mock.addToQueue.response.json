@@ -1,0 +1,31 @@
+{
+  "QueueDefinitionId": 53772,
+  "OutputData": null,
+  "AnalyticsData": null,
+  "Status": "New",
+  "ReviewStatus": "None",
+  "ReviewerUserId": null,
+  "Key": "ef306441-f7a6-4fad-ba8a-d09ec1237e2c",
+  "Reference": null,
+  "ProcessingExceptionType": null,
+  "DueDate": null,
+  "RiskSlaDate": null,
+  "Priority": "Normal",
+  "DeferDate": null,
+  "StartProcessing": null,
+  "EndProcessing": null,
+  "SecondsInPreviousAttempts": 0,
+  "AncestorId": null,
+  "RetryNumber": 0,
+  "SpecificData": "{\"DynamicProperties\":{\"hello\":\"world\"}}",
+  "CreationTime": "2020-07-02T13:04:56.4929897Z",
+  "Progress": null,
+  "RowVersion": "AAAAAAWxogQ=",
+  "Id": 39578029,
+  "ProcessingException": null,
+  "SpecificContent": {
+    "hello": "world"
+  },
+  "Output": null,
+  "Analytics": null
+}
