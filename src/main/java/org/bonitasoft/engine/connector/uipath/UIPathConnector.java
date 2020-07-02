@@ -48,7 +48,7 @@ public abstract class UIPathConnector extends AbstractConnector {
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
-        checkcloudInput();
+        checkCloudInput();
         if (isCloud()) {
             checkMandatoryStringInput(ACCOUNT_LOGICAL_NAME);
             checkMandatoryStringInput(TENANT_LOGICAL_NAME);
@@ -62,7 +62,7 @@ public abstract class UIPathConnector extends AbstractConnector {
         }
     }
 
-    protected void checkcloudInput() throws ConnectorValidationException {
+    protected void checkCloudInput() throws ConnectorValidationException {
         Boolean value = null;
         try {
             value = (Boolean) getInputParameter(CLOUD);
@@ -153,7 +153,7 @@ public abstract class UIPathConnector extends AbstractConnector {
             Builder retrofitBuilder = new Retrofit.Builder()
                     .addConverterFactory(new WrappedAttributeConverter(mapper))
                     .addConverterFactory(JacksonConverterFactory.create())
-                    .baseUrl(appendTraillingSlash(getUrl()));
+                    .baseUrl(getUrl());
 
             if (client != null) {
                 retrofitBuilder.client(client);
@@ -195,13 +195,14 @@ public abstract class UIPathConnector extends AbstractConnector {
     }
 
     String getUrl() {
-        return isCloud()
-                ? String.format("%s/%s/%s", CLOUD_ORCHESTRATOR_BASE_URL, getAccountLogicalName(), getTenantLogicalName())
-                : (String) getInputParameter(URL);
+        return appendTraillingSlash(isCloud()
+                ? String.format("%s/%s/%s", CLOUD_ORCHESTRATOR_BASE_URL, getAccountLogicalName(),
+                        getTenantLogicalName())
+                : (String) getInputParameter(URL));
     }
 
-    Boolean isCloud() {
-        return (Boolean) getInputParameter(CLOUD);
+    boolean isCloud() {
+        return (boolean) getInputParameter(CLOUD);
     }
 
     String getAccountLogicalName() {

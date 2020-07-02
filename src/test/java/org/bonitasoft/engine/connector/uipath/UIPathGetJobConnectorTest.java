@@ -14,8 +14,12 @@
  */
 package org.bonitasoft.engine.connector.uipath;
 
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,24 +29,31 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-public class UIPathGetJobConnectorTest {
+import retrofit2.Call;
+import retrofit2.Response;
+
+class UIPathGetJobConnectorTest {
 
     private static WireMockRule uiPathService;
 
     @BeforeAll
     public static void startMockServer() {
-         uiPathService = new WireMockRule(8888);
-         uiPathService.start();
+        uiPathService = new WireMockRule(8888);
+        uiPathService.start();
     }
-    
+
     @AfterAll
     public static void stopMockServer() {
         uiPathService.stop();
-   }
+    }
+
+    private Object sevrice;
 
     @BeforeEach
     public void configureStubs() throws Exception {
@@ -67,7 +78,7 @@ public class UIPathGetJobConnectorTest {
     }
 
     @Test
-    public void should_get_pending_job() throws Exception {
+    void should_get_pending_job() throws Exception {
         uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Jobs(268348846)"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -76,11 +87,11 @@ public class UIPathGetJobConnectorTest {
         UIPathGetJobConnector createConnector = createConnector();
         createConnector.connect();
         Map<String, Object> outputs = createConnector.execute();
-        assertThat(outputs.get(UIPathGetJobConnector.JOB_STATE)).isEqualTo(JobState.PENDING.toString());
+        assertThat(outputs).containsEntry(UIPathGetJobConnector.JOB_STATE, JobState.PENDING.toString());
     }
 
     @Test
-    public void should_get_successful_job() throws Exception {
+    void should_get_successful_job() throws Exception {
         uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Jobs(268348846)"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
@@ -89,7 +100,9 @@ public class UIPathGetJobConnectorTest {
         UIPathGetJobConnector createConnector = createConnector();
         createConnector.connect();
         Map<String, Object> outputs = createConnector.execute();
-        assertThat(outputs.get(UIPathGetJobConnector.JOB_STATE)).isEqualTo(JobState.SUCCESSFUL.toString());
-        assertThat(outputs.get(UIPathGetJobConnector.JOB_OUTPUT_ARGS)).isEqualTo("{\"out1\" : \"ok\"}");
+        assertThat(outputs)
+                .containsEntry(UIPathGetJobConnector.JOB_STATE, JobState.SUCCESSFUL.toString())
+                .containsEntry(UIPathGetJobConnector.JOB_OUTPUT_ARGS, "{\"out1\" : \"ok\"}");
     }
+    
 }

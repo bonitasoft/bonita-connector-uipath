@@ -19,6 +19,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,11 +40,11 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
     static final String QUEUE_NAME = "queueName";
     static final String REFERENCE_INPUT = "reference";
     static final String QUEUE_CONTENT = "queueContent";
-    private static final String PRIORITY_INPUT = "priority";
-    private static final String DUE_DATE_INPUT = "dueDate";
-    private static final String DEFER_DATE_INPUT = "deferDate";
-    private static final String ITEM_ID_OUTPUT = "itemId";
-    private static final String ITEM_KEY_OUTPUT = "itemKey";
+    static final String PRIORITY_INPUT = "priority";
+    static final String DUE_DATE_INPUT = "dueDate";
+    static final String DEFER_DATE_INPUT = "deferDate";
+    static final String ITEM_ID_OUTPUT = "itemId";
+    static final String ITEM_KEY_OUTPUT = "itemKey";
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
@@ -86,9 +87,11 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
                 .setName(getQueueName())
                 .setPriority(getPriority());
         getReference().ifPresent(itemData::setReference);
-        Optional<Map> content = getContent();
+        Optional<Map<Object, Object>> content = getContent();
         if (content.isPresent()) {
-            Map<String, Object> contentMap = content.get();
+            Map<String, Object> contentMap = content.get().entrySet().stream().collect(Collectors.toMap(
+                    entry -> entry.getKey().toString(),
+                    Entry<Object, Object>::getValue));
             itemData.setContent(contentMap.entrySet()
                     .stream()
                     .collect(Collectors.toMap(Map.Entry::getKey,
@@ -124,12 +127,12 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
         return Optional.ofNullable((String) getInputParameter(REFERENCE_INPUT));
     }
 
-    Optional<Map> getContent() {
+    Optional<Map<Object,Object>> getContent() {
         Object inputParameter = getInputParameter(QUEUE_CONTENT);
         if (inputParameter instanceof List) {
             return Optional.of(toMap(inputParameter));
         }
-        return Optional.ofNullable((Map) getInputParameter(QUEUE_CONTENT));
+        return Optional.ofNullable((Map<Object,Object>) getInputParameter(QUEUE_CONTENT));
     }
 
     String getPriority() {

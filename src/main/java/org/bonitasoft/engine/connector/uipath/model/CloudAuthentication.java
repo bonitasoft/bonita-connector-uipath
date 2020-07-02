@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.engine.connector.uipath.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -21,8 +23,11 @@ import lombok.Data;
 @AllArgsConstructor
 public class CloudAuthentication {
 
-    private String grant_type;
-    private String client_id;
-    private String refresh_token;
+    @JsonProperty("grant_type")
+    private String grantType;
+    @JsonProperty("client_id")
+    private String clientId;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 
 }

@@ -15,16 +15,20 @@
 package org.bonitasoft.engine.connector.uipath;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.spy;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.bonitasoft.engine.connector.uipath.model.Release;
 import org.bonitasoft.engine.connector.uipath.model.Robot;
-import org.junit.Assert;
+import org.bonitasoft.engine.connector.uipath.model.Strategy;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,20 +39,20 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import lombok.Data;
 
-public class UIPathStartJobsConnectorTest {
+class UIPathStartJobsConnectorTest {
 
     public static WireMockRule uiPathService;
-    
+
     @BeforeAll
     public static void startMockServer() {
-         uiPathService = new WireMockRule(8888);
-         uiPathService.start();
+        uiPathService = new WireMockRule(8888);
+        uiPathService.start();
     }
-    
+
     @AfterAll
     public static void stopMockServer() {
         uiPathService.stop();
-   }
+    }
 
     @BeforeEach
     public void configureStubs() throws Exception {
@@ -75,7 +79,7 @@ public class UIPathStartJobsConnectorTest {
     }
 
     @Test
-    public void should_authenticate() throws Exception {
+    void should_authenticate() throws Exception {
         UIPathConnector uiPathConnector = createConnector();
         uiPathConnector.connect();
         String token = uiPathConnector.authenticate();
@@ -84,7 +88,7 @@ public class UIPathStartJobsConnectorTest {
     }
 
     @Test
-    public void should_retrieve_releases() throws Exception {
+    void should_retrieve_releases() throws Exception {
         UIPathStartJobsConnector uiPathConnector = createConnector();
         uiPathConnector.connect();
         List<Release> releases = uiPathConnector.releases("aToken");
@@ -94,10 +98,16 @@ public class UIPathStartJobsConnectorTest {
         assertThat(release.getId()).isEqualTo(1);
         assertThat(release.getProcessKey()).isEqualTo("myProcessKey");
         assertThat(release.getCurrentVersion().getId()).isEqualTo(2);
+        
+        uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Releases"))
+                .willReturn(WireMock.aResponse().withStatus(500)));
+        
+        assertThrows(ConnectorException.class, () -> uiPathConnector.releases("aToken"));
     }
+    
 
     @Test
-    public void should_retrieve_robots() throws Exception {
+    void should_retrieve_robots() throws Exception {
         UIPathStartJobsConnector uiPathConnector = createConnector();
         uiPathConnector.connect();
         List<Robot> robots = uiPathConnector.robots("aToken");
@@ -105,23 +115,39 @@ public class UIPathStartJobsConnectorTest {
         assertThat(robots).hasSize(1);
         Robot robot = robots.get(0);
         assertThat(robot.getId()).isEqualTo(5);
+        
+        uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Robots"))
+                .willReturn(WireMock.aResponse().withStatus(500)));
+        assertThrows(ConnectorException.class, () -> uiPathConnector.robots("aToken"));
     }
+    
+    @Test
+    void should_retrieve_specific_robots() throws Exception {
+        UIPathStartJobsConnector uiPathConnector = createConnector(Strategy.SPECIFIC,0,Arrays.asList("5"));
+        uiPathConnector.connect();
+        List<Robot> robots = uiPathConnector.robots("aToken");
+
+        assertThat(robots).hasSize(1);
+        Robot robot = robots.get(0);
+        assertThat(robot.getId()).isEqualTo(5);
+    }
+    
 
     @Test
-    public void should_start_jobs() throws Exception {
+    void should_start_jobs() throws Exception {
         UIPathConnector uiPathConnector = createConnector();
         uiPathConnector.connect();
         Map<String, Object> outputs = uiPathConnector.execute();
         Object startedJobs = outputs.get("startedJobs");
         assertThat(startedJobs).isInstanceOf(List.class);
-        assertThat((List<?>)startedJobs).hasSize(1);
+        assertThat((List<?>) startedJobs).hasSize(1);
         String job = (String) ((List<?>) startedJobs).get(0);
 
         assertThat(job).contains("54");
     }
 
     @Test
-    public void should_throw_a_ConnectorValidationException_if_input_arguments_has_non_string_keys() throws Exception {
+    void should_throw_a_ConnectorValidationException_if_input_arguments_has_non_string_keys() throws Exception {
         UIPathStartJobsConnector uiPathConnector = new UIPathStartJobsConnector();
         Map<String, Object> inputs = new HashMap<>();
         Map<Object, Object> inputArgs = new HashMap<>();
@@ -129,15 +155,44 @@ public class UIPathStartJobsConnectorTest {
         inputArgs.put(1, "value2");
         inputs.put(UIPathStartJobsConnector.INPUT_ARGS, inputArgs);
         uiPathConnector.setInputParameters(inputs);
-        
-        Assert.assertThrows("Only String keys are allowed in job input arguments. Found [1].", 
-                ConnectorValidationException.class, 
-        () -> uiPathConnector.checkArgsInput());
+
+        assertThrows("Only String keys are allowed in job input arguments. Found [1].",
+                ConnectorValidationException.class,
+                () -> uiPathConnector.checkArgsInput());
     }
 
+    @Test
+    void should_detect_non_serializable_input_arguments()
+            throws Exception {
+        UIPathStartJobsConnector uiPathConnector = new UIPathStartJobsConnector();
+        Map<String, Object> inputs = new HashMap<>();
+        Map<Object, Object> inputArgs = new HashMap<>();
+        inputArgs.put("key", "value1");
+        inputArgs.put("user", new Object());
+        inputs.put(UIPathStartJobsConnector.INPUT_ARGS, inputArgs);
+        uiPathConnector.setInputParameters(inputs);
+
+        assertThrows(ConnectorValidationException.class, () -> uiPathConnector.checkArgsInput());
+    }
+    
+    @Test
+    void should_check_job_count_stratregy()
+            throws Exception {
+        createConnector(Strategy.JOBS_COUNT, 3, new ArrayList<>());
+        assertThrows(ConnectorValidationException.class, () -> createConnector(Strategy.JOBS_COUNT, null, new ArrayList<>()));
+        assertThrows(ConnectorValidationException.class, () -> createConnector(Strategy.JOBS_COUNT, 0, new ArrayList<>()));
+    }
+    
+    @Test
+    void should_check_specific_stratregy()
+            throws Exception {
+        createConnector(Strategy.SPECIFIC, 0, Arrays.asList("goldorak","optimus"));
+        assertThrows(ConnectorValidationException.class, () -> createConnector(Strategy.SPECIFIC, null, new ArrayList<>()));
+        assertThrows(ConnectorValidationException.class, () -> createConnector(Strategy.SPECIFIC, 0, null));
+    }
 
     @Test
-    public void should_validate_input_arguments()
+    void should_validate_input_arguments()
             throws Exception {
         UIPathStartJobsConnector uiPathConnector = new UIPathStartJobsConnector();
         Map<String, Object> inputs = new HashMap<>();
@@ -157,7 +212,7 @@ public class UIPathStartJobsConnectorTest {
         uiPathConnector.checkArgsInput();
     }
 
-    private UIPathStartJobsConnector createConnector() throws Exception {
+    private UIPathStartJobsConnector createConnector(Strategy strategy, Integer jobCount, List<String> robotNames) throws Exception {
         UIPathStartJobsConnector uiPathConnector = spy(new UIPathStartJobsConnector());
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(UIPathConnector.CLOUD, false);
@@ -167,15 +222,24 @@ public class UIPathStartJobsConnectorTest {
         parameters.put(UIPathConnector.PASSWORD, "somePassowrd");
         parameters.put(UIPathStartJobsConnector.PROCESS_NAME, "myProcessKey");
         parameters.put(UIPathStartJobsConnector.PROCESS_VERSION, "1.0");
+        parameters.put(UIPathStartJobsConnector.STRATEGY, strategy.toString());
+        parameters.put(UIPathStartJobsConnector.JOBS_COUNT, jobCount);
+        parameters.put(UIPathStartJobsConnector.ROBOTS_NAMES, robotNames);
         uiPathConnector.setInputParameters(parameters);
         uiPathConnector.validateInputParameters();
         return uiPathConnector;
     }
+    
+    private UIPathStartJobsConnector createConnector() throws Exception {
+        return createConnector(Strategy.ALL,0, new ArrayList<>());
+    }
 
     @Data
     class User {
+
         private String name;
         private String firstname;
         private User manager;
     }
+
 }
