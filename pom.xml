@@ -7,7 +7,7 @@
 
 	<groupId>org.bonitasoft.connectors</groupId>
 	<artifactId>bonita-connector-uipath</artifactId>
-	<version>2.1.1-SNAPSHOT</version>
+	<version>2.1.1</version>
 
 	<name>Bonita UIPath Connector</name>
 	<description>UIPath Connector for Bonita</description>
