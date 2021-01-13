@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 
 public class UIPathAddToQueueConnector extends UIPathConnector {
 
-    private static final int MAX_REF_LENGTH = 128;
     static final String QUEUE_NAME = "queueName";
     static final String REFERENCE_INPUT = "reference";
     static final String QUEUE_CONTENT = "queueContent";
@@ -43,6 +42,7 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
     static final String DEFER_DATE_INPUT = "deferDate";
     static final String ITEM_ID_OUTPUT = "itemId";
     static final String ITEM_KEY_OUTPUT = "itemKey";
+    private static final int MAX_REF_LENGTH = 128;
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {

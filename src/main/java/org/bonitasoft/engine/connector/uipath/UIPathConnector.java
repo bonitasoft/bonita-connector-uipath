@@ -24,32 +24,31 @@ import java.util.Map;
 
 public abstract class UIPathConnector extends AbstractConnector {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UIPathConnector.class.getName());
-    private static final String CLOUD_ORCHESTRATOR_BASE_URL = "https://platform.uipath.com";
-    private static final String HEADER_TENANT_NAME = "X-UIPATH-TenantName";
-    private static final String HEADER_AUTHORIZATION_NAME = "Authorization";
-
+    public static final String X_UIPATH_ORGANIZATIONUNITID = "x-uipath-organizationunitid";
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String APPLICATION_JSON = "application/json";
     static final String CLOUD = "cloud";
-
     // classic parameters
     static final String URL = "url";
     static final String USER = "user";
     static final String PASSWORD = "password";
     static final String TENANT = "tenant";
-
     // cloud parameters
     static final String ACCOUNT_LOGICAL_NAME = "accountLogicalName";
     static final String TENANT_LOGICAL_NAME = "tenantLogicalName";
     static final String USER_KEY = "userKey";
     static final String CLIENT_ID = "clientId";
     static final String ORGANIZATION_UNIT_ID = "organizationUnitId";
-
-    public static final String X_UIPATH_ORGANIZATIONUNITID = "x-uipath-organizationunitid";
-    public static final String CONTENT_TYPE = "Content-Type";
-    public static final String APPLICATION_JSON = "application/json";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(UIPathConnector.class.getName());
+    private static final String CLOUD_ORCHESTRATOR_BASE_URL = "https://platform.uipath.com";
+    private static final String HEADER_TENANT_NAME = "X-UIPATH-TenantName";
+    private static final String HEADER_AUTHORIZATION_NAME = "Authorization";
     protected UIPathService service;
     protected ObjectMapper mapper = new ObjectMapper();
+
+    private static String appendTraillingSlash(String url) {
+        return url.endsWith("/") ? url : url + "/";
+    }
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
@@ -184,10 +183,6 @@ public abstract class UIPathConnector extends AbstractConnector {
             }
         }
         return result;
-    }
-
-    private static String appendTraillingSlash(String url) {
-        return url.endsWith("/") ? url : url + "/";
     }
 
     String getOrganizationUnitId() {

@@ -17,18 +17,28 @@ package org.bonitasoft.engine.connector.uipath;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-import org.bonitasoft.engine.connector.uipath.model.*;
+import org.bonitasoft.engine.connector.uipath.model.Job;
+import org.bonitasoft.engine.connector.uipath.model.JobRequest;
+import org.bonitasoft.engine.connector.uipath.model.Release;
+import org.bonitasoft.engine.connector.uipath.model.Robot;
+import org.bonitasoft.engine.connector.uipath.model.Source;
+import org.bonitasoft.engine.connector.uipath.model.StartInfo;
+import org.bonitasoft.engine.connector.uipath.model.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UIPathStartJobsConnector extends UIPathConnector {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UIPathStartJobsConnector.class.getName());
 
     static final String PROCESS_NAME = "processName";
     static final String PROCESS_VERSION = "processVersion";
@@ -38,8 +48,8 @@ public class UIPathStartJobsConnector extends UIPathConnector {
     static final String INPUT_ARGS = "inputArguments";
     static final String RUNTIME_TYPE = "runtimeType";
     static final String SOURCE = "source";
-
     static final String STARTED_JOBS_OUTPUT = "startedJobs";
+    private static final Logger LOGGER = LoggerFactory.getLogger(UIPathStartJobsConnector.class.getName());
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {

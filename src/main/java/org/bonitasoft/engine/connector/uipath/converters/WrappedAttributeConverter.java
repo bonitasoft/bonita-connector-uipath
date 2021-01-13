@@ -19,6 +19,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Converter.Factory;
 import retrofit2.Retrofit;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -32,6 +33,11 @@ public class WrappedAttributeConverter extends Factory {
 
     public WrappedAttributeConverter(ObjectMapper mapper) {
         objectMapper = mapper;
+    }
+
+    private static Class<?> getClassArgumentFromParameterizedList(Type type) {
+        Type[] actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
+        return (Class<?>) actualTypeArguments[0];
     }
 
     /*
@@ -53,11 +59,6 @@ public class WrappedAttributeConverter extends Factory {
             return rawType.equals(List.class);
         }
         return false;
-    }
-
-    private static Class<?> getClassArgumentFromParameterizedList(Type type) {
-        Type[] actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
-        return (Class<?>) actualTypeArguments[0];
     }
 
     public <T> List<T> listFromJson(String json, String listAttribute, Class<T> elementClass) throws IOException {
