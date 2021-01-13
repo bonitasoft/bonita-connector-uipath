@@ -19,10 +19,10 @@
   <input name="processVersion" type="java.lang.String"/>
   <input name="strategy" type="java.lang.String" defaultValue="All"/>
   <input name="robotNames" type="java.util.List"/>
-  <input name="jobsCount" type="java.lang.Integer"/>
+  <input name="jobsCount" type="java.lang.Integer" defaultValue="1"/>
   <input name="inputArguments" type="java.util.Map"/>
-  <input name="runtimeType" type="java.util.String"/>
-  <input name="source" type="java.util.String"/>
+  <input name="runtimeType" type="java.lang.String" defaultValue="Development"/>
+  <input name="source" type="java.lang.String" defaultValue="Manual"/>
 
   <output name="startedJobs" type="java.util.List"/>
   
@@ -35,20 +35,21 @@
   <page id="configurationPage">
     <widget xsi:type="definition:Text" id="processNameWidget" inputName="processName"/>
     <widget xsi:type="definition:Text" id="processVersionWidget" inputName="processVersion"/>
-    <widget xsi:type="definition:Select" id="strategyCombo" inputName="strategy">
+    <widget xsi:type="definition:Select" id="strategyWidget" inputName="strategy">
       <items>All</items>
       <items>Specific</items>
+
       <items>JobsCount</items>
       <items>ModernJobsCount</items>
     </widget>
-    <widget xsi:type="definition:Text" id="runtimeTypeWidget" inputName="runtimeType" defaultValue="Development"/>
-    <widget xsi:type="definition:Text" id="organizationUnitIdWidget" inputName="organizationUnitId" defaultValue="12345"/>
-    <widget xsi:type="definition:Select" id="sourceCombo" inputName="source">
+    <widget xsi:type="definition:Text" id="runtimeTypeWidget" inputName="runtimeType"/>
+    <widget xsi:type="definition:Text" id="organizationUnitIdWidget" inputName="organizationUnitId"/>
+    <widget xsi:type="definition:Select" id="sourceWidget" inputName="source">
       <items>Manual</items>
       <items>Schedule</items>
     </widget>
     <widget xsi:type="definition:List" id="robotNamesWidget" inputName="robotNames"/>
-    <widget xsi:type="definition:Text" id="jobsCountWidget" inputName="jobsCount" defaultValue="1"/>
+    <widget xsi:type="definition:Text" id="jobsCountWidget" inputName="jobsCount" />
   </page>
   <page id="inputArgsPage">
     <widget xsi:type="definition:Array" id="inputArgsTable" inputName="inputArguments" cols="2">
