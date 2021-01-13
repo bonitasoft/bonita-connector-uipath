@@ -17,7 +17,7 @@ package org.bonitasoft.engine.connector.uipath.model;
 
 public enum Strategy {
 
-    ALL("All"), SPECIFIC("Specific"), JOBS_COUNT("JobsCount");
+    ALL("All"), SPECIFIC("Specific"), JOBS_COUNT("JobsCount"),MODERN_JOBS_COUNT("ModernJobsCount");
 
     private final String value;
 

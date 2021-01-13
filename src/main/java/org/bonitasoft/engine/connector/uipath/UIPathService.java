@@ -17,22 +17,10 @@ package org.bonitasoft.engine.connector.uipath;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
-import org.bonitasoft.engine.connector.uipath.model.CloudAuthentication;
-import org.bonitasoft.engine.connector.uipath.model.Job;
-import org.bonitasoft.engine.connector.uipath.model.JobRequest;
-import org.bonitasoft.engine.connector.uipath.model.QueueItem;
-import org.bonitasoft.engine.connector.uipath.model.Release;
-import org.bonitasoft.engine.connector.uipath.model.Robot;
+import org.bonitasoft.engine.connector.uipath.model.*;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.HeaderMap;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.*;
 
 public interface UIPathService {
 

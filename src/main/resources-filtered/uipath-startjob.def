@@ -13,14 +13,17 @@
   <input name="tenantLogicalName" type="java.lang.String"/>
   <input name="userKey" type="java.lang.String"/>
   <input name="clientId" type="java.lang.String"/>
-  
+  <input name="organizationUnitId" type="java.lang.String"/>
+
   <input mandatory="true" name="processName" type="java.lang.String"/>
   <input name="processVersion" type="java.lang.String"/>
   <input name="strategy" type="java.lang.String" defaultValue="All"/>
   <input name="robotNames" type="java.util.List"/>
   <input name="jobsCount" type="java.lang.Integer"/>
   <input name="inputArguments" type="java.util.Map"/>
- 
+  <input name="runtimeType" type="java.util.String"/>
+  <input name="source" type="java.util.String"/>
+
   <output name="startedJobs" type="java.util.List"/>
   
   <page id="authenticationPage">
@@ -36,9 +39,16 @@
       <items>All</items>
       <items>Specific</items>
       <items>JobsCount</items>
+      <items>ModernJobsCount</items>
     </widget>
-    <widget xsi:type="definition:List" id="robotsWidget" inputName="robotNames"/>
-    <widget xsi:type="definition:Text" id="jobsCountWidget" inputName="jobsCount"/>
+    <widget xsi:type="definition:Text" id="runtimeTypeWidget" inputName="runtimeType" defaultValue="Development"/>
+    <widget xsi:type="definition:Text" id="organizationUnitIdWidget" inputName="organizationUnitId" defaultValue="12345"/>
+    <widget xsi:type="definition:Select" id="sourceCombo" inputName="source">
+      <items>Manual</items>
+      <items>Schedule</items>
+    </widget>
+    <widget xsi:type="definition:List" id="robotNamesWidget" inputName="robotNames"/>
+    <widget xsi:type="definition:Text" id="jobsCountWidget" inputName="jobsCount" defaultValue="1"/>
   </page>
   <page id="inputArgsPage">
     <widget xsi:type="definition:Array" id="inputArgsTable" inputName="inputArguments" cols="2">
