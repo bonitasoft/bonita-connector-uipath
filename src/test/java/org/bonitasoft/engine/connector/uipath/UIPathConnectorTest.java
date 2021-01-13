@@ -30,12 +30,12 @@ class UIPathConnectorTest {
         parameters.put(UIPathConnector.CLOUD, null);
         connector.setInputParameters(parameters);
         assertThrows(ConnectorValidationException.class, () -> connector.validateInputParameters());
-        
+
         parameters.put(UIPathConnector.CLOUD, "true");
         connector.setInputParameters(parameters);
         assertThrows(ConnectorValidationException.class, () -> connector.validateInputParameters());
     }
-    
+
     @Test
     void should_validate_mandatory_url_input_parameter() throws Exception {
         UIPathConnector connector = newConnector();
@@ -45,37 +45,37 @@ class UIPathConnectorTest {
         parameters.put(UIPathConnector.URL, null);
         connector.setInputParameters(parameters);
         assertThrows(ConnectorValidationException.class, () -> connector.validateInputParameters());
-        
+
         parameters.put(UIPathConnector.URL, 123);
         connector.setInputParameters(parameters);
         assertThrows(ConnectorValidationException.class, () -> connector.validateInputParameters());
-        
+
         parameters.put(UIPathConnector.URL, "");
         connector.setInputParameters(parameters);
         assertThrows(ConnectorValidationException.class, () -> connector.validateInputParameters());
     }
-    
+
     @Test
     void should_build_on_premise_url() throws Exception {
         UIPathConnector connector = newConnector();
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(UIPathConnector.CLOUD, false);
-        
+
         parameters.put(UIPathConnector.URL, "https://cloud.uipath.com");
         connector.setInputParameters(parameters);
         assertThat(connector.getUrl()).isEqualTo("https://cloud.uipath.com/");
-        
+
         parameters.put(UIPathConnector.URL, "https://cloud.uipath.com/");
         connector.setInputParameters(parameters);
         assertThat(connector.getUrl()).isEqualTo("https://cloud.uipath.com/");
     }
-    
+
     @Test
     void should_build_cloud_url() throws Exception {
         UIPathConnector connector = newConnector();
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(UIPathConnector.CLOUD, true);
-        
+
         parameters.put(UIPathConnector.ACCOUNT_LOGICAL_NAME, "bonita");
         parameters.put(UIPathConnector.TENANT_LOGICAL_NAME, "bonita");
         connector.setInputParameters(parameters);

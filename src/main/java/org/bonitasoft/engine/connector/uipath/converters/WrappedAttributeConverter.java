@@ -14,18 +14,16 @@
  */
 package org.bonitasoft.engine.connector.uipath.converters;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
+import retrofit2.Converter.Factory;
+import retrofit2.Retrofit;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import okhttp3.ResponseBody;
-import retrofit2.Converter;
-import retrofit2.Converter.Factory;
-import retrofit2.Retrofit;
 
 
 public class WrappedAttributeConverter extends Factory {
@@ -35,6 +33,7 @@ public class WrappedAttributeConverter extends Factory {
     public WrappedAttributeConverter(ObjectMapper mapper) {
         objectMapper = mapper;
     }
+
     /*
      * (non-Javadoc)
      * @see retrofit2.Converter.Factory#responseBodyConverter(java.lang.reflect.Type, java.lang.annotation.Annotation[], retrofit2.Retrofit)

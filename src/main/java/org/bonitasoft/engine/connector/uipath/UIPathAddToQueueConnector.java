@@ -14,6 +14,15 @@
  */
 package org.bonitasoft.engine.connector.uipath;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.bonitasoft.engine.connector.ConnectorException;
+import org.bonitasoft.engine.connector.ConnectorValidationException;
+import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
+import org.bonitasoft.engine.connector.uipath.model.Priority;
+import org.bonitasoft.engine.connector.uipath.model.QueueItem;
+import org.bonitasoft.engine.connector.uipath.model.QueueItemRequest;
+import retrofit2.Response;
+
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
@@ -22,17 +31,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.bonitasoft.engine.connector.ConnectorException;
-import org.bonitasoft.engine.connector.ConnectorValidationException;
-import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
-import org.bonitasoft.engine.connector.uipath.model.Priority;
-import org.bonitasoft.engine.connector.uipath.model.QueueItem;
-import org.bonitasoft.engine.connector.uipath.model.QueueItemRequest;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import retrofit2.Response;
 
 public class UIPathAddToQueueConnector extends UIPathConnector {
 
@@ -127,12 +125,12 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
         return Optional.ofNullable((String) getInputParameter(REFERENCE_INPUT));
     }
 
-    Optional<Map<Object,Object>> getContent() {
+    Optional<Map<Object, Object>> getContent() {
         Object inputParameter = getInputParameter(QUEUE_CONTENT);
         if (inputParameter instanceof List) {
             return Optional.of(toMap(inputParameter));
         }
-        return Optional.ofNullable((Map<Object,Object>) getInputParameter(QUEUE_CONTENT));
+        return Optional.ofNullable((Map<Object, Object>) getInputParameter(QUEUE_CONTENT));
     }
 
     String getPriority() {

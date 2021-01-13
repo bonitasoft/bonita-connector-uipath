@@ -16,7 +16,6 @@ package org.bonitasoft.engine.connector.uipath.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 
 @Data
@@ -27,5 +26,5 @@ public class Robot {
     private String name;
     @JsonProperty("Id")
     private int id;
-    
+
 }

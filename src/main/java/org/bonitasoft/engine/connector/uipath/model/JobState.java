@@ -18,7 +18,7 @@ package org.bonitasoft.engine.connector.uipath.model;
 public enum JobState {
     PENDING("Pending"), RUNNING("Running"), STOPPING("Stopping"), TERMINATING("Terminating"), FAULTED("Faulted"), SUCCESSFUL(
             "Successful"), STOPPED("Stopped");
-    
+
     private final String value;
 
     private JobState(String value) {

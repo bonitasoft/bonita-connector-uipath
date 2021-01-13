@@ -98,13 +98,13 @@ class UIPathStartJobsConnectorTest {
         assertThat(release.getId()).isEqualTo(1);
         assertThat(release.getProcessKey()).isEqualTo("myProcessKey");
         assertThat(release.getCurrentVersion().getId()).isEqualTo(2);
-        
+
         uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Releases"))
                 .willReturn(WireMock.aResponse().withStatus(500)));
-        
+
         assertThrows(ConnectorException.class, () -> uiPathConnector.releases("aToken"));
     }
-    
+
 
     @Test
     void should_retrieve_robots() throws Exception {
@@ -115,15 +115,15 @@ class UIPathStartJobsConnectorTest {
         assertThat(robots).hasSize(1);
         Robot robot = robots.get(0);
         assertThat(robot.getId()).isEqualTo(5);
-        
+
         uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Robots"))
                 .willReturn(WireMock.aResponse().withStatus(500)));
         assertThrows(ConnectorException.class, () -> uiPathConnector.robots("aToken"));
     }
-    
+
     @Test
     void should_retrieve_specific_robots() throws Exception {
-        UIPathStartJobsConnector uiPathConnector = createConnector(Strategy.SPECIFIC,0,Arrays.asList("5"));
+        UIPathStartJobsConnector uiPathConnector = createConnector(Strategy.SPECIFIC, 0, Arrays.asList("5"));
         uiPathConnector.connect();
         List<Robot> robots = uiPathConnector.robots("aToken");
 
@@ -131,7 +131,7 @@ class UIPathStartJobsConnectorTest {
         Robot robot = robots.get(0);
         assertThat(robot.getId()).isEqualTo(5);
     }
-    
+
 
     @Test
     void should_start_jobs() throws Exception {
@@ -174,7 +174,7 @@ class UIPathStartJobsConnectorTest {
 
         assertThrows(ConnectorValidationException.class, () -> uiPathConnector.checkArgsInput());
     }
-    
+
     @Test
     void should_check_job_count_stratregy()
             throws Exception {
@@ -182,11 +182,11 @@ class UIPathStartJobsConnectorTest {
         assertThrows(ConnectorValidationException.class, () -> createConnector(Strategy.JOBS_COUNT, null, new ArrayList<>()));
         assertThrows(ConnectorValidationException.class, () -> createConnector(Strategy.JOBS_COUNT, 0, new ArrayList<>()));
     }
-    
+
     @Test
     void should_check_specific_stratregy()
             throws Exception {
-        createConnector(Strategy.SPECIFIC, 0, Arrays.asList("goldorak","optimus"));
+        createConnector(Strategy.SPECIFIC, 0, Arrays.asList("goldorak", "optimus"));
         assertThrows(ConnectorValidationException.class, () -> createConnector(Strategy.SPECIFIC, null, new ArrayList<>()));
         assertThrows(ConnectorValidationException.class, () -> createConnector(Strategy.SPECIFIC, 0, null));
     }
@@ -229,9 +229,9 @@ class UIPathStartJobsConnectorTest {
         uiPathConnector.validateInputParameters();
         return uiPathConnector;
     }
-    
+
     private UIPathStartJobsConnector createConnector() throws Exception {
-        return createConnector(Strategy.ALL,0, new ArrayList<>());
+        return createConnector(Strategy.ALL, 0, new ArrayList<>());
     }
 
     @Data

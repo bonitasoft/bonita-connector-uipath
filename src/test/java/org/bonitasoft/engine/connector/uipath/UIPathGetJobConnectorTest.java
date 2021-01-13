@@ -104,5 +104,5 @@ class UIPathGetJobConnectorTest {
                 .containsEntry(UIPathGetJobConnector.JOB_STATE, JobState.SUCCESSFUL.toString())
                 .containsEntry(UIPathGetJobConnector.JOB_OUTPUT_ARGS, "{\"out1\" : \"ok\"}");
     }
-    
+
 }

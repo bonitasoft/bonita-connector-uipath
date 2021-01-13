@@ -29,7 +29,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 class UIPathAddToQueueConnectorTest {
-    
+
     public static WireMockRule uiPathService;
 
     @BeforeAll
@@ -56,7 +56,7 @@ class UIPathAddToQueueConnectorTest {
                                 .withHeader("Content-Type", "application/json")
                                 .withBodyFile("mock.addToQueue.response.json")));
     }
-    
+
     private UIPathAddToQueueConnector createConnector() throws Exception {
         UIPathAddToQueueConnector connector = spy(new UIPathAddToQueueConnector());
         Map<String, Object> parameters = new HashMap<>();
@@ -73,16 +73,16 @@ class UIPathAddToQueueConnectorTest {
         connector.validateInputParameters();
         return connector;
     }
-    
+
     @Test
     void should_add_item_to_queue() throws Exception {
         UIPathAddToQueueConnector connector = createConnector();
-        
+
         connector.connect();
         Map<String, Object> outputs = connector.execute();
-        
-       assertThat(outputs).containsEntry(UIPathAddToQueueConnector.ITEM_ID_OUTPUT, 39578029L)
-           .containsEntry(UIPathAddToQueueConnector.ITEM_KEY_OUTPUT,"ef306441-f7a6-4fad-ba8a-d09ec1237e2c");
+
+        assertThat(outputs).containsEntry(UIPathAddToQueueConnector.ITEM_ID_OUTPUT, 39578029L)
+                .containsEntry(UIPathAddToQueueConnector.ITEM_KEY_OUTPUT, "ef306441-f7a6-4fad-ba8a-d09ec1237e2c");
     }
 
 }

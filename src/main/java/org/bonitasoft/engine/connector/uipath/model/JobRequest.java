@@ -15,7 +15,6 @@
 package org.bonitasoft.engine.connector.uipath.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -27,5 +26,5 @@ public class JobRequest {
 
     @JsonProperty("startInfo")
     private StartInfo startInfo;
-    
+
 }

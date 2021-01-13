@@ -15,7 +15,6 @@
 package org.bonitasoft.engine.connector.uipath.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

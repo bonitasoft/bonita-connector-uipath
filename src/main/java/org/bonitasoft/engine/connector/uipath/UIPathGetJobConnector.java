@@ -14,13 +14,12 @@
  */
 package org.bonitasoft.engine.connector.uipath;
 
-import java.io.IOException;
-
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.bonitasoft.engine.connector.uipath.model.Job;
-
 import retrofit2.Response;
+
+import java.io.IOException;
 
 public class UIPathGetJobConnector extends UIPathConnector {
 

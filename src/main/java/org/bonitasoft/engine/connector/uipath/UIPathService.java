@@ -14,25 +14,24 @@
  */
 package org.bonitasoft.engine.connector.uipath;
 
-import java.util.List;
-import java.util.Map;
-
 import org.bonitasoft.engine.connector.uipath.model.*;
-
 import retrofit2.Call;
 import retrofit2.http.*;
+
+import java.util.List;
+import java.util.Map;
 
 public interface UIPathService {
 
     @FormUrlEncoded
     @POST("api/account/authenticate")
     Call<Map<String, String>> authenticate(@Field("tenancyName") String tenant,
-            @Field("usernameOrEmailAddress") String user,
-            @Field("password") String password);
+                                           @Field("usernameOrEmailAddress") String user,
+                                           @Field("password") String password);
 
     @POST("https://account.uipath.com/oauth/token")
     Call<Map<String, String>> authenticateInCloud(@HeaderMap Map<String, String> headers,
-            @Body CloudAuthentication cloudAuthentication);
+                                                  @Body CloudAuthentication cloudAuthentication);
 
     @GET("odata/Releases")
     Call<List<Release>> releases(@HeaderMap Map<String, String> headers);
