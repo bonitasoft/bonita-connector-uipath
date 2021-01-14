@@ -23,8 +23,7 @@ jobs:
     - name: Build and test
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      run: ./mvnw -B clean verify sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      run: ./mvnw -B clean verify
     - run: mkdir staging && cp target/*.zip staging
     - name: Upload artifact
       uses: actions/upload-artifact@v2
