@@ -44,5 +44,9 @@ public class StartInfo {
     @JsonProperty("InputArguments")
     @JsonInclude(Include.NON_EMPTY)
     private String args;
+    @JsonProperty("RuntimeType")
+    @JsonInclude(Include.NON_NULL)
+    private String runtimeType;
+    
 
 }

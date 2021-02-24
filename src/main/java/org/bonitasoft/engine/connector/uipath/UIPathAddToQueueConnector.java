@@ -150,7 +150,9 @@ public class UIPathAddToQueueConnector extends UIPathConnector {
     QueueItem addToQueue(String token, AddToQueueRequest request) throws IOException, ConnectorException {
         Response<QueueItem> response = getService().addQueueItem(createAuthenticationHeaders(token), request).execute();
         if (!response.isSuccessful()) {
-            throw new ConnectorException(response.errorBody().string());
+            throw new ConnectorException(String.format("Failed to add item to queue: %s -%s", 
+                    response.code(), 
+                    getErrorMessage(response)));
         }
         return response.body();
     }

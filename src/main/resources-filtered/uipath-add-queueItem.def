@@ -13,6 +13,7 @@
   <input name="tenantLogicalName" type="java.lang.String"/>
   <input name="userKey" type="java.lang.String"/>
   <input name="clientId" type="java.lang.String"/>
+  <input name="organizationUnitId" type="java.lang.String"/>
   
   <input name="queueName" type="java.lang.String"/>
   <input name="reference" type="java.lang.String"/>
@@ -31,6 +32,7 @@
     <widget xsi:type="definition:Password" id="passwordWidget" inputName="password"/>
     <widget xsi:type="definition:Text" id="accountLogicalNameWidget" inputName="accountLogicalName"/>
     <widget xsi:type="definition:Text" id="tenantLogicalNameWidget" inputName="tenantLogicalName"/>
+    <widget xsi:type="definition:Text" id="organizationUnitIdWidget" inputName="organizationUnitId"/>
     <widget xsi:type="definition:Text" id="userKeyWidget" inputName="userKey"/>
     <widget xsi:type="definition:Password" id="clientIdWidget" inputName="clientId"/>
   </page>
