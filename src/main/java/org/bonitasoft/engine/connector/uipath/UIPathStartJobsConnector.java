@@ -51,6 +51,8 @@ public class UIPathStartJobsConnector extends UIPathConnector {
     static final String STRATEGY = "strategy";
     static final String INPUT_ARGS = "inputArguments";
     static final String STARTED_JOBS_OUTPUT = "startedJobs";
+    static final String RUNTIME_TYPE = "runtimeType";
+    static final String SOURCE = "source";
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
@@ -61,7 +63,7 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         checkArgsInput();
     }
 
-    void checkJobsCountIfJobsCountStrategy() throws ConnectorValidationException {
+    void checkRobotsIfSpecific() throws ConnectorValidationException {
         Optional<String> strategy = getStrategy();
         if (strategy.filter(Strategy.SPECIFIC.toString()::equals).isPresent()) {
             Optional<List<String>> robots = getRobots();
@@ -71,7 +73,7 @@ public class UIPathStartJobsConnector extends UIPathConnector {
         }
     }
 
-    void checkRobotsIfSpecific() throws ConnectorValidationException {
+    void checkJobsCountIfJobsCountStrategy() throws ConnectorValidationException {
         Optional<String> strategy = getStrategy();
         if (strategy.filter(Strategy.JOBS_COUNT.toString()::equals).isPresent()) {
             Optional<Integer> jobsCount = getJobsCount();
@@ -100,6 +102,18 @@ public class UIPathStartJobsConnector extends UIPathConnector {
 
     Optional<String> getStrategy() {
         return Optional.ofNullable((String) getInputParameter(STRATEGY));
+    }
+
+    Optional<String> getRuntimeType() {
+        String runtimeType = (String) getInputParameter(RUNTIME_TYPE);
+        if(runtimeType == null || runtimeType.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(runtimeType);
+    }
+
+    Optional<String> getSource() {
+        return Optional.ofNullable((String) getInputParameter(SOURCE));
     }
 
     Optional<Map<Object, Object>> getInputArguments() {
@@ -146,11 +160,14 @@ public class UIPathStartJobsConnector extends UIPathConnector {
                 .setSource(Source.MANUAL.toString())
                 .setReleaseKey(release.getKey());
 
+        getRuntimeType().ifPresent(startInfo::setRuntimeType);
         getStrategy().ifPresent(startInfo::setStrategy);
+
         if (Objects.equals(startInfo.getStrategy(), Strategy.SPECIFIC.toString())) {
             startInfo.setRobotIds(robotIds);
         }
-        if (Objects.equals(startInfo.getStrategy(), Strategy.JOBS_COUNT.toString())) {
+        if (Objects.equals(startInfo.getStrategy(), Strategy.JOBS_COUNT.toString())
+                || Objects.equals(startInfo.getStrategy(), Strategy.MODERN_JOBS_COUNT.toString())) {
             getJobsCount().ifPresent(startInfo::setJobsCount);
         }
         try {
@@ -170,7 +187,8 @@ public class UIPathStartJobsConnector extends UIPathConnector {
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error(response.toString());
             }
-            throw new ConnectorException("Failed to start job: " + response.message());
+            throw new ConnectorException(
+                    String.format("Failed to start job: %s - %s", response.code(), getErrorMessage(response)));
         }
         return response.body();
     }
@@ -222,7 +240,9 @@ public class UIPathStartJobsConnector extends UIPathConnector {
             throw new ConnectorException("Failed to retrieve releases.", e);
         }
         if (!response.isSuccessful()) {
-            throw new ConnectorException("Failed to retrieve releases: " + response.message());
+            throw new ConnectorException(String.format("Failed to retrieve releases: %s - %s",
+                    response.code(),
+                    getErrorMessage(response)));
         }
         return response.body();
     }
@@ -235,7 +255,9 @@ public class UIPathStartJobsConnector extends UIPathConnector {
             throw new ConnectorException("Failed to retrieve robots.", e);
         }
         if (!response.isSuccessful()) {
-            throw new ConnectorException("Failed to retrieve robots: " + response.message());
+            throw new ConnectorException(String.format("Failed to retrieve robots: %s - %s",
+                    response.code(),
+                    getErrorMessage(response)));
         }
         return response.body();
     }

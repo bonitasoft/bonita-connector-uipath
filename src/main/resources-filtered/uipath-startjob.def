@@ -13,12 +13,15 @@
   <input name="tenantLogicalName" type="java.lang.String"/>
   <input name="userKey" type="java.lang.String"/>
   <input name="clientId" type="java.lang.String"/>
+  <input name="organizationUnitId" type="java.lang.String"/>
   
   <input mandatory="true" name="processName" type="java.lang.String"/>
   <input name="processVersion" type="java.lang.String"/>
   <input name="strategy" type="java.lang.String" defaultValue="All"/>
   <input name="robotNames" type="java.util.List"/>
-  <input name="jobsCount" type="java.lang.Integer"/>
+  <input name="jobsCount" type="java.lang.Integer" defaultValue="1"/>
+  <input name="runtimeType" type="java.lang.String" defaultValue="Development"/>
+  <input name="source" type="java.lang.String" defaultValue="Manual"/>
   <input name="inputArguments" type="java.util.Map"/>
  
   <output name="startedJobs" type="java.util.List"/>
@@ -28,6 +31,11 @@
     <widget xsi:type="definition:Text" id="tenantWidget" inputName="tenant"/>
     <widget xsi:type="definition:Text" id="userWidget" inputName="user"/>
     <widget xsi:type="definition:Password" id="passwordWidget" inputName="password"/>
+    <widget xsi:type="definition:Text" id="accountLogicalNameWidget" inputName="accountLogicalName"/>
+    <widget xsi:type="definition:Text" id="tenantLogicalNameWidget" inputName="tenantLogicalName"/>
+    <widget xsi:type="definition:Text" id="organizationUnitIdWidget" inputName="organizationUnitId"/>
+    <widget xsi:type="definition:Text" id="userKeyWidget" inputName="userKey"/>
+    <widget xsi:type="definition:Password" id="clientIdWidget" inputName="clientId"/>
   </page>
   <page id="configurationPage">
     <widget xsi:type="definition:Text" id="processNameWidget" inputName="processName"/>
@@ -35,7 +43,15 @@
     <widget xsi:type="definition:Select" id="strategyCombo" inputName="strategy">
       <items>All</items>
       <items>Specific</items>
+      <items>RobotCount</items>
       <items>JobsCount</items>
+      <items>ModernJobsCount</items>
+    </widget>
+    <widget xsi:type="definition:Text" id="runtimeTypeWidget" inputName="runtimeType" />
+    <widget xsi:type="definition:Select" id="sourceWidget" inputName="source">
+      <items>Manual</items>
+      <items>Schedule</items>
+      <items>Queue</items>
     </widget>
     <widget xsi:type="definition:List" id="robotsWidget" inputName="robotNames"/>
     <widget xsi:type="definition:Text" id="jobsCountWidget" inputName="jobsCount"/>

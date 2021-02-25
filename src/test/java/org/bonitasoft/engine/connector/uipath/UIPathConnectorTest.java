@@ -79,7 +79,7 @@ class UIPathConnectorTest {
         parameters.put(UIPathConnector.ACCOUNT_LOGICAL_NAME, "bonita");
         parameters.put(UIPathConnector.TENANT_LOGICAL_NAME, "bonita");
         connector.setInputParameters(parameters);
-        assertThat(connector.getUrl()).isEqualTo("https://platform.uipath.com/bonita/bonita/");
+        assertThat(connector.getUrl()).isEqualTo("https://cloud.uipath.com/bonita/bonita/");
     }
 
     @Test
@@ -118,6 +118,7 @@ class UIPathConnectorTest {
         parameters.put(UIPathConnector.CLOUD, true);
         parameters.put(UIPathConnector.ACCOUNT_LOGICAL_NAME, "bonitasoft");
         parameters.put(UIPathConnector.TENANT_LOGICAL_NAME, "a_tenant");
+        parameters.put(UIPathConnector.ORGANIZATION_UNIT_ID, "myUnitId");
         parameters.put(UIPathConnector.USER_KEY, "someToken");
         parameters.put(UIPathConnector.CLIENT_ID, "1234");
         parameters.put(UIPathGetJobConnector.JOB_ID, "268348846");
