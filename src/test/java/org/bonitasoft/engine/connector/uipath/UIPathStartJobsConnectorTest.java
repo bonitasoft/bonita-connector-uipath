@@ -14,8 +14,9 @@
  */
 package org.bonitasoft.engine.connector.uipath;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.spy;
 
 import java.util.ArrayList;
@@ -29,50 +30,35 @@ import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.bonitasoft.engine.connector.uipath.model.Release;
 import org.bonitasoft.engine.connector.uipath.model.Robot;
 import org.bonitasoft.engine.connector.uipath.model.Strategy;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 import lombok.Data;
 
+@WireMockTest(httpPort = 8888)
 class UIPathStartJobsConnectorTest {
-
-    public static WireMockRule uiPathService;
-
-    @BeforeAll
-    public static void startMockServer() {
-        uiPathService = new WireMockRule(8888);
-        uiPathService.start();
-    }
-
-    @AfterAll
-    public static void stopMockServer() {
-        uiPathService.stop();
-    }
 
     @BeforeEach
     public void configureStubs() throws Exception {
-        uiPathService.stubFor(WireMock.post(WireMock.urlEqualTo("/api/account/authenticate"))
+        stubFor(WireMock.post(WireMock.urlEqualTo("/api/account/authenticate"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("mock.authenticate.response.json")));
 
-        uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Releases"))
+        stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Releases"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("mock.releases.response.json")));
 
-        uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Robots"))
+        stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Robots"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("mock.robots.response.json")));
 
-        uiPathService
-                .stubFor(WireMock.post(WireMock.urlEqualTo("/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs"))
+        stubFor(WireMock.post(WireMock.urlEqualTo("/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs"))
                         .willReturn(WireMock.aResponse()
                                 .withHeader("Content-Type", "application/json")
                                 .withBodyFile("mock.jobs.response.json")));
@@ -99,10 +85,10 @@ class UIPathStartJobsConnectorTest {
         assertThat(release.getProcessKey()).isEqualTo("myProcessKey");
         assertThat(release.getCurrentVersion().getId()).isEqualTo(2);
         
-        uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Releases"))
+        stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Releases"))
                 .willReturn(WireMock.aResponse().withStatus(500)));
         
-        assertThrows(ConnectorException.class, () -> uiPathConnector.releases("aToken"));
+       assertThrows(ConnectorException.class, () -> uiPathConnector.releases("aToken"));
     }
     
 
@@ -116,7 +102,7 @@ class UIPathStartJobsConnectorTest {
         Robot robot = robots.get(0);
         assertThat(robot.getId()).isEqualTo(5);
         
-        uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Robots"))
+        stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Robots"))
                 .willReturn(WireMock.aResponse().withStatus(500)));
         assertThrows(ConnectorException.class, () -> uiPathConnector.robots("aToken"));
     }
@@ -156,9 +142,9 @@ class UIPathStartJobsConnectorTest {
         inputs.put(UIPathStartJobsConnector.INPUT_ARGS, inputArgs);
         uiPathConnector.setInputParameters(inputs);
 
-        assertThrows("Only String keys are allowed in job input arguments. Found [1].",
-                ConnectorValidationException.class,
-                () -> uiPathConnector.checkArgsInput());
+        assertThrows(ConnectorValidationException.class,
+                () -> uiPathConnector.checkArgsInput(),
+                "Only String keys are allowed in job input arguments. Found [1].");
     }
 
     @Test

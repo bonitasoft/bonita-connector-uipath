@@ -14,50 +14,27 @@
  */
 package org.bonitasoft.engine.connector.uipath;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.engine.connector.uipath.model.JobState;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
-import retrofit2.Call;
-import retrofit2.Response;
-
+@WireMockTest(httpPort = 8888)
 class UIPathGetJobConnectorTest {
 
-    private static WireMockRule uiPathService;
-
-    @BeforeAll
-    public static void startMockServer() {
-        uiPathService = new WireMockRule(8888);
-        uiPathService.start();
-    }
-
-    @AfterAll
-    public static void stopMockServer() {
-        uiPathService.stop();
-    }
-
-    private Object sevrice;
-
     @BeforeEach
-    public void configureStubs() throws Exception {
-        uiPathService.stubFor(WireMock.post(WireMock.urlEqualTo("/api/account/authenticate"))
+    public void configureStubs(WireMockRuntimeInfo info) throws Exception {
+        stubFor(WireMock.post(WireMock.urlEqualTo("/api/account/authenticate"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("mock.authenticate.response.json")));
@@ -79,7 +56,7 @@ class UIPathGetJobConnectorTest {
 
     @Test
     void should_get_pending_job() throws Exception {
-        uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Jobs(268348846)"))
+        stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Jobs(268348846)"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("mock.job.response.json")));
@@ -91,8 +68,8 @@ class UIPathGetJobConnectorTest {
     }
 
     @Test
-    void should_get_successful_job() throws Exception {
-        uiPathService.stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Jobs(268348846)"))
+    void should_get_successful_job(WireMockRuntimeInfo info) throws Exception {
+        stubFor(WireMock.get(WireMock.urlEqualTo("/odata/Jobs(268348846)"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("mock.job.success.response.json")));

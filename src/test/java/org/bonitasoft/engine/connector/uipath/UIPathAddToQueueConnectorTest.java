@@ -14,49 +14,35 @@
  */
 package org.bonitasoft.engine.connector.uipath;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
+@WireMockTest(httpPort = 8888)
 class UIPathAddToQueueConnectorTest {
-    
-    public static WireMockRule uiPathService;
-
-    @BeforeAll
-    public static void startMockServer() {
-        uiPathService = new WireMockRule(8888);
-        uiPathService.start();
-    }
-
-    @AfterAll
-    public static void stopMockServer() {
-        uiPathService.stop();
-    }
 
     @BeforeEach
     public void configureStubs() throws Exception {
-        uiPathService.stubFor(WireMock.post(WireMock.urlEqualTo("/api/account/authenticate"))
+        stubFor(WireMock.post(WireMock.urlEqualTo("/api/account/authenticate"))
                 .willReturn(WireMock.aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("mock.authenticate.response.json")));
 
-        uiPathService
-                .stubFor(WireMock.post(WireMock.urlEqualTo("/odata/Queues/UiPathODataSvc.AddQueueItem"))
-                        .willReturn(WireMock.aResponse()
-                                .withHeader("Content-Type", "application/json")
-                                .withBodyFile("mock.addToQueue.response.json")));
+        stubFor(WireMock.post(WireMock.urlEqualTo("/odata/Queues/UiPathODataSvc.AddQueueItem"))
+                .willReturn(WireMock.aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("mock.addToQueue.response.json")));
     }
-    
+
     private UIPathAddToQueueConnector createConnector() throws Exception {
         UIPathAddToQueueConnector connector = spy(new UIPathAddToQueueConnector());
         Map<String, Object> parameters = new HashMap<>();
@@ -73,16 +59,16 @@ class UIPathAddToQueueConnectorTest {
         connector.validateInputParameters();
         return connector;
     }
-    
+
     @Test
     void should_add_item_to_queue() throws Exception {
         UIPathAddToQueueConnector connector = createConnector();
-        
+
         connector.connect();
         Map<String, Object> outputs = connector.execute();
-        
-       assertThat(outputs).containsEntry(UIPathAddToQueueConnector.ITEM_ID_OUTPUT, 39578029L)
-           .containsEntry(UIPathAddToQueueConnector.ITEM_KEY_OUTPUT,"ef306441-f7a6-4fad-ba8a-d09ec1237e2c");
+
+        assertThat(outputs).containsEntry(UIPathAddToQueueConnector.ITEM_ID_OUTPUT, 39578029L)
+                .containsEntry(UIPathAddToQueueConnector.ITEM_KEY_OUTPUT, "ef306441-f7a6-4fad-ba8a-d09ec1237e2c");
     }
 
 }
