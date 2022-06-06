@@ -60,7 +60,7 @@
 
         <!-- Connector dependencies -->
         <retrofit.version>2.9.0</retrofit.version>
-        <logging-interceptor.version>3.11.0</logging-interceptor.version>
+        <logging-interceptor.version>4.9.3</logging-interceptor.version>
         <lombok.version>1.18.24</lombok.version>
 
         <!-- Bonita -->
