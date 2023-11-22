@@ -32,7 +32,7 @@
 
     <properties>
         <!-- Maven -->
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyy.MM.dd-hh.mm</maven.build.timestamp.format>
@@ -61,7 +61,7 @@
         <!-- Connector dependencies -->
         <retrofit.version>2.9.0</retrofit.version>
         <logging-interceptor.version>4.10.0</logging-interceptor.version>
-        <lombok.version>1.18.24</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
 
         <!-- Bonita -->
         <bonita.engine.version>7.13.0</bonita.engine.version>
