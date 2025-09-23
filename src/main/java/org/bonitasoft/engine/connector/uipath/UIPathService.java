@@ -42,9 +42,14 @@ public interface UIPathService {
             @Field("usernameOrEmailAddress") String user,
             @Field("password") String password);
 
-    @POST("https://account.uipath.com/oauth/token")
-    Call<Map<String, String>> authenticateInCloud(@HeaderMap Map<String, String> headers,
-            @Body CloudAuthentication cloudAuthentication);
+    @FormUrlEncoded
+    @POST("https://cloud.uipath.com/{accountLogicalName}/identity_/connect/token")
+    Call<Map<String, String>> authenticateInCloudWithClientCredentials(
+            @Path("accountLogicalName") String accountLogicalName,
+            @Field("grant_type") String grantType,
+            @Field("client_id") String clientId,
+            @Field("client_secret") String clientSecret,
+            @Field("scope") String scope);
 
     @GET("odata/Releases")
     Call<List<Release>> releases(@HeaderMap Map<String, String> headers);
