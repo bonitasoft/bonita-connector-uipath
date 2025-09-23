@@ -1,34 +1,32 @@
 package org.bonitasoft.engine.connector.uipath;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bonitasoft.engine.connector.AbstractConnector;
-import org.bonitasoft.engine.connector.ConnectorException;
-import org.bonitasoft.engine.connector.ConnectorValidationException;
-import org.bonitasoft.engine.connector.uipath.converters.WrappedAttributeConverter;
-import org.bonitasoft.engine.connector.uipath.model.CloudAuthentication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.bonitasoft.engine.connector.AbstractConnector;
+import org.bonitasoft.engine.connector.ConnectorException;
+import org.bonitasoft.engine.connector.ConnectorValidationException;
+import org.bonitasoft.engine.connector.uipath.converters.WrappedAttributeConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.Retrofit.Builder;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class UIPathConnector extends AbstractConnector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UIPathConnector.class.getName());
 
     static final String CLOUD = "cloud";
+    static final String CLOUD_AUTH_TYPE = "cloudAuthType";
     // classic parameters
     static final String URL = "url";
     static final String USER = "user";
@@ -37,9 +35,14 @@ public abstract class UIPathConnector extends AbstractConnector {
     // cloud parameters
     static final String ACCOUNT_LOGICAL_NAME = "accountLogicalName";
     static final String TENANT_LOGICAL_NAME = "tenantLogicalName";
-    static final String USER_KEY = "userKey";
     static final String CLIENT_ID = "clientId";
+    static final String CLIENT_SECRET = "clientSecret";
+    static final String SCOPE = "scope";
+    static final String TOKEN = "token";
     static final String ORGANIZATION_UNIT_ID = "organizationUnitId";
+
+    static final String TOKEN_AUTH_TYPE = "Token (Bearer)";
+    static final String CLIENT_CREDENTIALS_AUTH_TYPE = "Client credentials (Oauth)";
 
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
@@ -60,11 +63,23 @@ public abstract class UIPathConnector extends AbstractConnector {
     public void validateInputParameters() throws ConnectorValidationException {
         checkCloudInput();
         if (isCloud()) {
-            checkMandatoryStringInput(ACCOUNT_LOGICAL_NAME);
-            checkMandatoryStringInput(TENANT_LOGICAL_NAME);
-            checkMandatoryStringInput(USER_KEY);
-            checkMandatoryStringInput(CLIENT_ID);
-            checkMandatoryStringInput(ORGANIZATION_UNIT_ID);
+            checkMandatoryStringInput(CLOUD_AUTH_TYPE);
+            if (CLIENT_CREDENTIALS_AUTH_TYPE.equalsIgnoreCase(getCloudAuthType())) {
+                checkMandatoryStringInput(ACCOUNT_LOGICAL_NAME);
+                checkMandatoryStringInput(TENANT_LOGICAL_NAME);
+                checkMandatoryStringInput(CLIENT_SECRET);
+                checkMandatoryStringInput(CLIENT_ID);
+                checkMandatoryStringInput(ORGANIZATION_UNIT_ID);
+            } else if (TOKEN_AUTH_TYPE.equalsIgnoreCase(getCloudAuthType())) {
+                checkMandatoryStringInput(ACCOUNT_LOGICAL_NAME);
+                checkMandatoryStringInput(TENANT_LOGICAL_NAME);
+                checkMandatoryStringInput(TOKEN);
+                checkMandatoryStringInput(ORGANIZATION_UNIT_ID);
+            } else {
+                throw new ConnectorValidationException(this,
+                        String.format("Cloud authentication type '%s' is not supported. Supported types are: '%s' and '%s'",
+                                getCloudAuthType(), TOKEN_AUTH_TYPE, CLIENT_CREDENTIALS_AUTH_TYPE));
+            }
         } else {
             checkMandatoryStringInput(URL);
             checkMandatoryStringInput(TENANT);
@@ -116,13 +131,20 @@ public abstract class UIPathConnector extends AbstractConnector {
         Response<Map<String, String>> response;
         try {
             if (isCloud()) {
-                Map<String, String> headers = new HashMap<>();
-                headers.put(CONTENT_TYPE, APPLICATION_JSON);
-                headers.put(TENANT_NAME_HEADER, getTenantLogicalName());
-                CloudAuthentication cloudAuthentication = new CloudAuthentication("refresh_token", getClientId(),
-                        getUserKey());
-                response = service.authenticateInCloud(headers, cloudAuthentication).execute();
+                if (CLIENT_CREDENTIALS_AUTH_TYPE.equalsIgnoreCase(getCloudAuthType())) {
+                    LOGGER.debug("Authenticate in cloud with client credentials");
+                    response = service.authenticateInCloudWithClientCredentials(
+                            getAccountLogicalName(),
+                            "client_credentials",
+                            getClientId(),
+                            getClientSecret(),
+                            getScope()).execute();
+                } else {
+                    LOGGER.debug("Authenticate in cloud with token");
+                    return getToken();
+                }
             } else {
+                LOGGER.debug("Authenticate on premise");
                 response = service.authenticate(getTenant(), getUser(), getPassword()).execute();
             }
         } catch (IOException e) {
@@ -222,12 +244,16 @@ public abstract class UIPathConnector extends AbstractConnector {
     String getUrl() {
         return appendTraillingSlash(isCloud()
                 ? String.format("%s/%s/%s", CLOUD_ORCHESTRATOR_BASE_URL, getAccountLogicalName(),
-                        getTenantLogicalName())
+                getTenantLogicalName())
                 : (String) getInputParameter(URL));
     }
 
     boolean isCloud() {
         return (boolean) getInputParameter(CLOUD);
+    }
+
+    String getCloudAuthType() {
+        return (String) getInputParameter(CLOUD_AUTH_TYPE);
     }
 
     String getAccountLogicalName() {
@@ -238,8 +264,16 @@ public abstract class UIPathConnector extends AbstractConnector {
         return (String) getInputParameter(CLIENT_ID);
     }
 
-    String getUserKey() {
-        return (String) getInputParameter(USER_KEY);
+    String getClientSecret() {
+        return (String) getInputParameter(CLIENT_SECRET);
+    }
+
+    String getToken() {
+        return (String) getInputParameter(TOKEN);
+    }
+
+    String getScope() {
+        return (String) getInputParameter(SCOPE);
     }
 
 }

@@ -6,7 +6,7 @@
   <category icon="rpa.png" id="RPA"/>
   
   <input mandatory="true" name="cloud" type="java.lang.Boolean" defaultValue="false"/>
-  <input name="cloudAuthType" type="java.lang.String" defaultValue="Token"/>
+  <input name="cloudAuthType" type="java.lang.String" defaultValue="Token (Bearer)"/>
   <input name="url" type="java.lang.String" defaultValue="https://demo.uipath.com/"/>
   <input name="tenant" type="java.lang.String" defaultValue="Default"/>
   <input name="user" type="java.lang.String"/>
@@ -27,7 +27,7 @@
   <page id="authenticationPage">
     <widget xsi:type="definition:Checkbox" id="cloudCheckbox" inputName="cloud"/>
     <widget xsi:type="definition:RadioGroup" id="cloudAuthTypeRadio" inputName="cloudAuthType">
-      <choices>Token</choices>
+      <choices>Token (Bearer)</choices>
       <choices>Client credentials (Oauth)</choices>
     </widget>
     <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
