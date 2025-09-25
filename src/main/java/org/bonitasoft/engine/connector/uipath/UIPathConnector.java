@@ -55,7 +55,7 @@ public abstract class UIPathConnector extends AbstractConnector {
     protected UIPathService service;
     protected ObjectMapper mapper = new ObjectMapper();
 
-    private static String appendTraillingSlash(String url) {
+    private static String appendTrailingSlash(String url) {
         return url.endsWith("/") ? url : url + "/";
     }
 
@@ -242,7 +242,7 @@ public abstract class UIPathConnector extends AbstractConnector {
     }
 
     String getUrl() {
-        return appendTraillingSlash(isCloud()
+        return appendTrailingSlash(isCloud()
                 ? String.format("%s/%s/%s", CLOUD_ORCHESTRATOR_BASE_URL, getAccountLogicalName(),
                 getTenantLogicalName())
                 : (String) getInputParameter(URL));
