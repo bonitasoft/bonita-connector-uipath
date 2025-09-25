@@ -16,8 +16,8 @@ __Clone__ or __fork__ this repository, then at the root of the project run:
 
 In order to create a new release:
 - On the release branch, make sure to update the pom version (remove the -SNAPSHOT)
-- Run the action 'Create release', set the version to release as parameter
-- Update the `master` with the next SNAPSHOT version.
+- Run the [release](https://github.com/bonitasoft/bonita-connector-uipath/actions/workflows/release.yml) action, set the version to release as parameter
+- Update the `master` branch with the next SNAPSHOT version.
 
 ## Contributing
 
