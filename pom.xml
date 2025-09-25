@@ -59,7 +59,7 @@
         <uipath-startjob.main-class>org.bonitasoft.engine.connector.uipath.UIPathStartJobsConnector</uipath-startjob.main-class>
 
         <!-- Connector dependencies -->
-        <retrofit.version>2.9.0</retrofit.version>
+        <retrofit.version>3.0.0</retrofit.version>
         <logging-interceptor.version>4.12.0</logging-interceptor.version>
         <lombok.version>1.18.30</lombok.version>
 
@@ -82,7 +82,7 @@
         <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
         <groovy.version>3.0.19</groovy.version>
         <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+        <central-maven-plugin>0.8.0</central-maven-plugin>
         <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
 
@@ -260,14 +260,12 @@
                     <version>${sonar-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>${nexus-staging-maven-plugin.version}</version>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-maven-plugin.version}</version>
                     <extensions>true</extensions>
                     <configuration>
-                        <serverId>ossrh</serverId>
-                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                        <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                        <autoPublish>true</autoPublish>
                     </configuration>
                 </plugin>
             </plugins>
@@ -327,7 +325,7 @@
     </build>
 
     <profiles>
-        <!-- Deployment profile (required so these plugins are only used 
+        <!-- Deployment profile (required so these plugins are only used
             when deploying) -->
         <profile>
             <id>deploy</id>
@@ -346,7 +344,7 @@
                                     <goal>sign</goal>
                                 </goals>
                                 <configuration>
-                                    <!-- Prevent `gpg` from using pinentry 
+                                    <!-- Prevent `gpg` from using pinentry
                                         programs -->
                                     <gpgArguments>
                                         <arg>--pinentry-mode</arg>
@@ -360,18 +358,6 @@
             </build>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <!-- Central Repository -->
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
     <scm>
         <developerConnection>scm:git:git@github.com:bonitasoft/bonita-connector-uipath.git</developerConnection>
