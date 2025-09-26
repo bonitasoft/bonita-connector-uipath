@@ -33,7 +33,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         SONAR_TOKEN: ${{env.SONAR_TOKEN}}
-      run: ./mvnw -B clean verify sonar:sonar
+      run: ./mvnw -B -ntp clean verify sonar:sonar
 
     - name: Copy artifacts for staging
       run: |
