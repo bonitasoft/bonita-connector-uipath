@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-import org.bonitasoft.engine.connector.uipath.model.CloudAuthentication;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -106,33 +105,50 @@ class UIPathConnectorTest {
     }
 
     @Test
-    void should_authenticate_in_the_cloud() throws Exception {
+    void should_authenticate_in_the_cloud_with_client_credentials() throws Exception {
         UIPathConnector connector = newConnector();
-        UIPathService sevrice = Mockito.mock(UIPathService.class);
+        UIPathService service = Mockito.mock(UIPathService.class);
         Call<Map<String, String>> call = mock(Call.class);
         when(call.execute()).thenReturn(Response.success(new HashMap<String, String>()));
-        when(sevrice.authenticateInCloud(Mockito.anyMap(), Mockito.notNull())).thenReturn(call);
-        doReturn(sevrice).when(connector).createService();
+        when(service.authenticateInCloudWithClientCredentials(Mockito.notNull(), Mockito.notNull(), Mockito.notNull(), Mockito.notNull(), Mockito.notNull())).thenReturn(call);
+        doReturn(service).when(connector).createService();
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(UIPathConnector.CLOUD, true);
+        parameters.put(UIPathConnector.CLOUD_AUTH_TYPE, UIPathConnector.CLIENT_CREDENTIALS_AUTH_TYPE);
         parameters.put(UIPathConnector.ACCOUNT_LOGICAL_NAME, "bonitasoft");
         parameters.put(UIPathConnector.TENANT_LOGICAL_NAME, "a_tenant");
         parameters.put(UIPathConnector.ORGANIZATION_UNIT_ID, "myUnitId");
-        parameters.put(UIPathConnector.USER_KEY, "someToken");
         parameters.put(UIPathConnector.CLIENT_ID, "1234");
-        parameters.put(UIPathGetJobConnector.JOB_ID, "268348846");
+        parameters.put(UIPathConnector.CLIENT_SECRET, "someSecret");
+        parameters.put(UIPathConnector.SCOPE, "someScope");
         connector.setInputParameters(parameters);
         connector.validateInputParameters();
         connector.connect();
         connector.authenticate();
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("X-UIPATH-TenantName", "a_tenant");
-        headers.put("Content-Type", "application/json");
-        CloudAuthentication cloudAuthentication = new CloudAuthentication("refresh_token", "1234", "someToken");
+        verify(service).authenticateInCloudWithClientCredentials("bonitasoft", "client_credentials", "1234", "someSecret", "someScope");
+    }
 
-        verify(sevrice).authenticateInCloud(headers, cloudAuthentication);
+    @Test
+    void should_authenticate_in_the_cloud_with_token() throws Exception {
+        UIPathConnector connector = newConnector();
+        UIPathService service = Mockito.mock(UIPathService.class);
+        doReturn(service).when(connector).createService();
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(UIPathConnector.CLOUD, true);
+        parameters.put(UIPathConnector.CLOUD_AUTH_TYPE, UIPathConnector.TOKEN_AUTH_TYPE);
+        parameters.put(UIPathConnector.ACCOUNT_LOGICAL_NAME, "bonitasoft");
+        parameters.put(UIPathConnector.TENANT_LOGICAL_NAME, "a_tenant");
+        parameters.put(UIPathConnector.ORGANIZATION_UNIT_ID, "myUnitId");
+        parameters.put(UIPathConnector.TOKEN, "someToken");
+        connector.setInputParameters(parameters);
+        connector.validateInputParameters();
+        connector.connect();
+
+        assertThat(connector.authenticate()).isEqualTo("someToken");
+
     }
 
     private UIPathConnector newConnector() {

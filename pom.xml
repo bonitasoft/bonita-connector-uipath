@@ -7,8 +7,7 @@
 
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-uipath</artifactId>
-    <version>2.2.3-SNAPSHOT</version>
-
+    <version>2.3.0-SNAPSHOT</version>
     <name>Bonita UIPath Connector</name>
     <description>UIPath Connector for Bonita</description>
     <url>https://www.bonitasoft.com</url>
@@ -39,21 +38,21 @@
 
         <!--Add Queue Item Connector -->
         <uipath-add-queueItem.def.id>uipath-add-queueItem</uipath-add-queueItem.def.id>
-        <uipath-add-queueItem.def.version>2.1.0</uipath-add-queueItem.def.version>
+        <uipath-add-queueItem.def.version>2.2.0</uipath-add-queueItem.def.version>
         <uipath-add-queueItem.impl.id>${uipath-add-queueItem.def.id}-impl</uipath-add-queueItem.impl.id>
         <uipath-add-queueItem.impl.version>${project.version}</uipath-add-queueItem.impl.version>
         <uipath-add-queueItem.main-class>org.bonitasoft.engine.connector.uipath.UIPathAddToQueueConnector</uipath-add-queueItem.main-class>
 
         <!--Get Job Connector -->
         <uipath-getjob.def.id>uipath-getjob</uipath-getjob.def.id>
-        <uipath-getjob.def.version>2.1.0</uipath-getjob.def.version>
+        <uipath-getjob.def.version>2.2.0</uipath-getjob.def.version>
         <uipath-getjob.impl.id>${uipath-getjob.def.id}-impl</uipath-getjob.impl.id>
         <uipath-getjob.impl.version>${project.version}</uipath-getjob.impl.version>
         <uipath-getjob.main-class>org.bonitasoft.engine.connector.uipath.UIPathGetJobConnector</uipath-getjob.main-class>
 
         <!--Start Job Connector -->
         <uipath-startjob.def.id>uipath-startjob</uipath-startjob.def.id>
-        <uipath-startjob.def.version>2.1.0</uipath-startjob.def.version>
+        <uipath-startjob.def.version>2.2.0</uipath-startjob.def.version>
         <uipath-startjob.impl.id>${uipath-startjob.def.id}-impl</uipath-startjob.impl.id>
         <uipath-startjob.impl.version>${project.version}</uipath-startjob.impl.version>
         <uipath-startjob.main-class>org.bonitasoft.engine.connector.uipath.UIPathStartJobsConnector</uipath-startjob.main-class>

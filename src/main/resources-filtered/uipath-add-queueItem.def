@@ -5,14 +5,17 @@
   <icon>uipath.png</icon>
   <category icon="rpa.png" id="RPA"/>
   <input mandatory="true" name="cloud" type="java.lang.Boolean" defaultValue="false"/>
+  <input name="cloudAuthType" type="java.lang.String" defaultValue="Token (Bearer)"/>
   <input name="url" type="java.lang.String" defaultValue="https://demo.uipath.com/"/>
   <input name="tenant" type="java.lang.String" defaultValue="Default"/>
   <input name="user" type="java.lang.String"/>
   <input name="password" type="java.lang.String"/>
   <input name="accountLogicalName" type="java.lang.String"/>
   <input name="tenantLogicalName" type="java.lang.String"/>
-  <input name="userKey" type="java.lang.String"/>
   <input name="clientId" type="java.lang.String"/>
+  <input name="clientSecret" type="java.lang.String"/>
+  <input name="scope" type="java.lang.String" defaultValue="OR.Default"/>
+  <input name="token" type="java.lang.String"/>
   <input name="organizationUnitId" type="java.lang.String"/>
   
   <input name="queueName" type="java.lang.String"/>
@@ -26,6 +29,11 @@
   <output name="itemKey" type="java.lang.String"/>
   
   <page id="authenticationPage">
+    <widget xsi:type="definition:Checkbox" id="cloudCheckbox" inputName="cloud"/>
+    <widget xsi:type="definition:RadioGroup" id="cloudAuthTypeRadio" inputName="cloudAuthType">
+      <choices>Token (Bearer)</choices>
+      <choices>Client credentials (Oauth)</choices>
+    </widget>
     <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
     <widget xsi:type="definition:Text" id="tenantWidget" inputName="tenant"/>
     <widget xsi:type="definition:Text" id="userWidget" inputName="user"/>
@@ -33,8 +41,10 @@
     <widget xsi:type="definition:Text" id="accountLogicalNameWidget" inputName="accountLogicalName"/>
     <widget xsi:type="definition:Text" id="tenantLogicalNameWidget" inputName="tenantLogicalName"/>
     <widget xsi:type="definition:Text" id="organizationUnitIdWidget" inputName="organizationUnitId"/>
-    <widget xsi:type="definition:Text" id="userKeyWidget" inputName="userKey"/>
-    <widget xsi:type="definition:Password" id="clientIdWidget" inputName="clientId"/>
+    <widget xsi:type="definition:Text" id="clientIdWidget" inputName="clientId"/>
+    <widget xsi:type="definition:Password" id="clientSecretWidget" inputName="clientSecret"/>
+    <widget xsi:type="definition:Text" id="scopeWidget" inputName="scope"/>
+    <widget xsi:type="definition:Text" id="tokenWidget" inputName="token"/>
   </page>
   <page id="configurationPage">
     <widget xsi:type="definition:Text" id="queueNameWidget" inputName="queueName"/>

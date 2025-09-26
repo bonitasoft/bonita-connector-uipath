@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.connector.uipath.model.AddToQueueRequest;
-import org.bonitasoft.engine.connector.uipath.model.CloudAuthentication;
 import org.bonitasoft.engine.connector.uipath.model.Job;
 import org.bonitasoft.engine.connector.uipath.model.JobRequest;
 import org.bonitasoft.engine.connector.uipath.model.QueueItem;
@@ -42,9 +41,14 @@ public interface UIPathService {
             @Field("usernameOrEmailAddress") String user,
             @Field("password") String password);
 
-    @POST("https://account.uipath.com/oauth/token")
-    Call<Map<String, String>> authenticateInCloud(@HeaderMap Map<String, String> headers,
-            @Body CloudAuthentication cloudAuthentication);
+    @FormUrlEncoded
+    @POST("https://cloud.uipath.com/{organizationName}/identity_/connect/token")
+    Call<Map<String, String>> authenticateInCloudWithClientCredentials(
+            @Path("organizationName") String accountLogicalName,
+            @Field("grant_type") String grantType,
+            @Field("client_id") String clientId,
+            @Field("client_secret") String clientSecret,
+            @Field("scope") String scope);
 
     @GET("odata/Releases")
     Call<List<Release>> releases(@HeaderMap Map<String, String> headers);
