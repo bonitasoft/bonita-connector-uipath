@@ -6,10 +6,10 @@ This project is a Bonita connector that integrates with UiPath Orchestrator to a
 
 - **GroupId:** `org.bonitasoft.connectors`
 - **ArtifactId:** `bonita-connector-uipath`
-- **Current version:** `2.3.1-SNAPSHOT`
-- **Java version:** 11 (compiled), 17 (CI build)
+- **Current version:** `3.0.0-SNAPSHOT`
+- **Java version:** 17
 - **License:** GPL v2.0
-- **Bonita Engine version:** 7.14.0
+- **Bonita runtime version:** 12.0 (`bonita-runtime-bom`; Bonita 7.14 - 11.x: 2.x versions)
 
 The connector ships three distinct operations:
 1. **Add Queue Item** (`uipath-add-queueItem`) — adds an item to a UiPath queue
@@ -68,6 +68,8 @@ src/
 | Library | Purpose |
 |---|---|
 | `bonita-common` (provided) | Bonita connector API (`AbstractConnector`) |
+| `jackson-databind` | JSON (de)serialization, bundled (version managed by the Bonita BOM) |
+| `slf4j-api` (provided) | Logging facade provided by the Bonita runtime |
 | `retrofit2` + `converter-jackson` | Typed HTTP client for UiPath REST API |
 | `okhttp3:logging-interceptor` | HTTP request/response debug logging |
 | `lombok` (provided) | Boilerplate reduction (getters/setters/builders) |

@@ -46,7 +46,7 @@ jobs:
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
@@ -57,10 +57,22 @@ jobs:
         # queries: security-extended,security-and-quality
 
 
+    # TODO Bonita 12.0 GA: remove the two steps below once Bonita 12.0 is released on Maven Central (only needed to resolve runtime snapshots)
+    - name: Extract secrets from Keeper
+      uses: Keeper-Security/ksm-action@3a1d7a4b72f910a8ed46377b3b015fbabe60689b # v1.3.3
+      with:
+        keeper-secret-config: ${{ secrets.KSM_CONFIG }}
+        secrets: |
+          ${{ vars.KEEPER_JFROG_RECORD_ID }}/field/login > env:JFROG_USER
+          ${{ vars.KEEPER_JFROG_RECORD_ID }}/field/password > env:JFROG_TOKEN
+
+    - name: Setup Maven settings (Bonita Artifactory read access)
+      run: mkdir -p ~/.m2 && cp .github/maven-settings.xml ~/.m2/settings.xml
+
     # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+      uses: github/codeql-action/autobuild@v3
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
@@ -73,6 +85,6 @@ jobs:
     #   ./location_of_script_within_repo/buildscript.sh
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
