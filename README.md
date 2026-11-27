@@ -6,6 +6,16 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.bonitasoft.connectors/bonita-connector-uipath.svg?label=Maven%20Central&color=orange)](https://search.maven.org/search?q=g:%22org.bonitasoft.connectors%22%20AND%20a:%22bonita-connector-uipath%22)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-yellow.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
+## Compatibility
+
+| Connector              | Bonita          | Java          |
+|------------------------|-----------------|---------------|
+| 3.x (`master`)         | 12.0 and later  | 17 and later  |
+| 2.x (up to 2.3.0)      | 7.14 to 11.x    | 11 and later  |
+
+The connector definitions (`uipath-add-queueItem`, `uipath-startjob`, `uipath-getjob` 2.2.0) and their inputs/outputs
+are unchanged. From 3.0.0, the connector bundles Jackson (it no longer relies on the Jackson of the Bonita runtime).
+
 ## Usage
 
 **IMPORTANT:** Version 2.3.0 of the connector requires Bonita Studio released after October 2025.  
